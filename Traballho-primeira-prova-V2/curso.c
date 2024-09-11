@@ -17,6 +17,18 @@ Arvore_curso *criar_curso()
     return curso;
 }
 
+void ler_dados_curso(Arvore_curso *curso)
+{
+    printf("Digite o codigo do curso: ");
+    scanf("%d", &curso->codigo);
+
+    printf("Digite o nome do curso: ");
+    scanf(" %[^\n]", curso->nome);
+
+    printf("Digite o periodo do curso: ");
+    scanf("%d", &curso->periodo);
+}
+
 Arvore_curso *inserir_curso(Arvore_curso *curso, Arvore_curso *no)
 {
     if (curso == NULL)
@@ -49,3 +61,76 @@ void imprimir_cursos(Arvore_curso *curso)
         imprimir_cursos(curso->dir);
     }
 }
+
+Arvore_curso *buscar_curso (Arvore_curso *curso, int codigo)
+{
+    Arvore_curso *aux = NULL;
+    if (curso != NULL)
+    {
+        if (codigo == curso->codigo)
+        {
+            aux = curso;
+        }
+        else
+        {
+            if (codigo < curso->codigo)
+            {
+                aux = buscar_curso(curso->esq, codigo);
+            }
+            else
+            {
+                aux = buscar_curso(curso->dir, codigo);
+            }
+        }
+    }
+    return aux;
+}
+
+Arvore_curso *remover_curso(Arvore_curso *curso, int codigo)
+{
+    if (curso != NULL)
+    {
+        if (codigo < curso->codigo)
+        {
+            curso->esq = remover_curso(curso->esq, codigo);
+        }
+        else if (codigo > curso->codigo)
+        {
+            curso->dir = remover_curso(curso->dir, codigo);
+        }
+        else
+        {
+            if (curso->esq == NULL && curso->dir == NULL)
+            {
+                free(curso);
+                curso = NULL;
+            }
+            else if (curso->esq == NULL)
+            {
+                Arvore_curso *aux = curso;
+                curso = curso->dir;
+                free(aux);
+            }
+            else if (curso->dir == NULL)
+            {
+                Arvore_curso *aux = curso;
+                curso = curso->esq;
+                free(aux);
+            }
+            else
+            {
+                Arvore_curso *aux = curso->esq;
+                while (aux->dir != NULL)
+                {
+                    aux = aux->dir;
+                }
+                curso->codigo = aux->codigo;
+                curso->esq = remover_curso(curso->esq, aux->codigo);
+            }
+        }
+    }
+    return curso;
+
+
+}
+
