@@ -9,7 +9,8 @@ void exibir_menu() {
     printf("1. Cadastrar novo curso\n");
     printf("2. Cadastrar novo aluno\n");
     printf("3. Buscar curso por codigo\n");
-    printf("4. Sair\n");
+    printf("4. Cadastrar disciplina\n");
+    printf("5. Sair\n");
     printf("Escolha uma opcao: ");
 }
 
@@ -80,15 +81,38 @@ int main() {
                     printf("Curso nao encontrado.\n");
                 }
                 break;
-
             case 4:
+                /*iii) Cadastrar disciplinas a qualquer momento em uma árvore de disciplinas de um determinado curso, ou
+                seja, um disciplina só pode ser cadastrada se o curso já estiver sido cadastrado, além disso, o período da
+                disciplina deve ser válido, ou seja, estar entre 1 e a quantidade máxima de períodos do curso. A carga
+                horária da disciplina deve ser múltiplo de 15, variando entre 30 e 90.*/
+                printf("Digite o codigo do curso: ");
+                scanf("%d", &codigo_curso);
+                curso = buscar_curso(raiz_cursos, codigo_curso);
+                if (curso == NULL) {
+                    printf("Curso nao encontrado.\n");
+                    break;
+                }
+                // Cadastrar disciplina
+                disciplina = criar_disciplina();
+                printf("Digite o codigo da disciplina: ");
+                scanf("%d", &disciplina->codigo);
+                printf("Digite o nome da disciplina: ");
+                scanf(" %[^\n]", disciplina->nome);
+                printf("Digite o periodo da disciplina: ");
+                scanf("%d", &disciplina->periodo);
+                printf("Digite a carga horaria da disciplina: ");
+                scanf("%d", &disciplina->carga_horaria);
+
+                // Verificar se o periodo e a carga horaria são válidos            
+                break;
+            case 5:
                 // Finalizar programa
                 // Liberar memoria alocada, se necessario
                 // liberar_alunos(raiz_alunos);
                 // liberar_cursos(raiz_cursos);
                 printf("Saindo...\n");
                 exit(0);
-
             default:
                 printf("Opcao invalida. Tente novamente.\n");
         }
