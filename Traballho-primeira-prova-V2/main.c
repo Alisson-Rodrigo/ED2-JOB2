@@ -22,6 +22,7 @@ int main() {
     char nome[100];
     Aluno *aluno;
     Arvore_curso *curso;
+    arvore_disciplinas *disciplina;
 
     while (1) {
         exibir_menu();
