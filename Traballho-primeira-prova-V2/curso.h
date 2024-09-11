@@ -1,12 +1,13 @@
 #include "disciplinas.h"
 
-struct arvore_curso {
+typedef struct arvore_curso {
     int codigo;
     char nome[50];
     int periodo;
     Arvore_disciplinas *raiz_disciplinas; 
-    arvore_curso *esq;
-    arvore_curso *dir;
-};
+    struct arvore_curso *esq;
+    struct arvore_curso *dir;
+}Arvore_curso;
 
-typedef struct arvore_curso Arvore_curso;
+Arvore_curso *criar_curso();
+Arvore_curso *inserir_curso(Arvore_curso *curso, Arvore_curso *no);

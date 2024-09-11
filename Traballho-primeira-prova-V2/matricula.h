@@ -1,8 +1,8 @@
-struct arvore_matricula
+typedef struct arvore_matricula
 {
     int codigo_disciplina;
-    arvore_matricula *esq;
-    arvore_matricula *dir;
-};
+    struct arvore_matricula *esq;
+    struct arvore_matricula *dir;
+}Arvore_matricula;
 
-typedef struct arvore_matricula Arvore_matricula;
+
