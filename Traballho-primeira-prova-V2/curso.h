@@ -4,7 +4,7 @@ typedef struct arvore_curso {
     int codigo;
     char nome[50];
     int periodo;
-    Arvore_disciplinas *raiz_disciplinas; 
+    struct arvore_disciplinas *raiz_disciplinas; 
     struct arvore_curso *esq;
     struct arvore_curso *dir;
 }Arvore_curso;
