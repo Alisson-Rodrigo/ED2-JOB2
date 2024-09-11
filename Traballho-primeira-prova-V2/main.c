@@ -1,69 +1,98 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "curso.c"
+#include <string.h>
+#include "curso.c"   // Inclua o cabeçalho correto para a árvore de cursos
+#include "alunos.c"  // Inclua o cabeçalho correto para a lista de alunos
 
-int main()
-{
+void exibir_menu() {
+    printf("Menu:\n");
+    printf("1. Cadastrar novo curso\n");
+    printf("2. Cadastrar novo aluno\n");
+    printf("3. Buscar curso por codigo\n");
+    printf("4. Sair\n");
+    printf("Escolha uma opcao: ");
+}
+
+int main() {
     Arvore_curso *raiz_cursos = NULL;
-    int opcao, codigo;
+    Aluno *raiz_alunos = NULL;
+    int opcao;
+    int codigo, codigo_curso, matricula;
+    char nome[100];
+    Aluno *aluno;
     Arvore_curso *curso;
 
-    do
-    {
-        printf("Menu:\n");
-        printf("1. Cadastrar curso\n");
-        printf("2. Imprimir cursos\n");
-        printf("3. Buscar curso\n");
-        printf("4. Remover curso\n");
-        printf("5. Sair\n");
-        printf("Escolha uma opção: ");
+    while (1) {
+        exibir_menu();
         scanf("%d", &opcao);
 
-        switch (opcao)
-        {
+        switch (opcao) {
             case 1:
+                // Cadastro de curso
+                printf("Digite o codigo do curso: ");
+                scanf("%d", &codigo);
+                printf("Digite o nome do curso: ");
+                scanf(" %[^\n]", nome);
+
                 curso = criar_curso();
-                ler_dados_curso(curso);
+                curso->codigo = codigo;
+                strcpy(curso->nome, nome);
+
                 raiz_cursos = inserir_curso(raiz_cursos, curso);
+                printf("Curso cadastrado com sucesso!\n");
                 break;
 
             case 2:
-                imprimir_cursos(raiz_cursos);
+                // Cadastro de aluno
+                printf("Digite a matricula do aluno: ");
+                scanf("%d", &matricula);
+                printf("Digite o nome do aluno: ");
+                scanf(" %[^\n]", nome);
+                printf("Digite o codigo do curso do aluno: ");
+                scanf("%d", &codigo_curso);
+
+                // Verificar se o codigo do curso existe
+                curso = buscar_curso(raiz_cursos, codigo_curso);
+                if (curso == NULL) {
+                    printf("Codigo de curso nao encontrado. Cadastro do aluno nao realizado.\n");
+                    break;
+                }
+
+                aluno = criar_aluno();
+                aluno->matricula = matricula;
+                strcpy(aluno->nome, nome);
+                aluno->codigo_curso = codigo_curso;
+
+                raiz_alunos = inserir_aluno(raiz_alunos, aluno);
+                printf("Aluno cadastrado com sucesso!\n");
                 break;
 
             case 3:
-                printf("Digite o código do curso a ser buscado: ");
+                // Buscar curso
+                printf("Digite o codigo do curso a buscar: ");
                 scanf("%d", &codigo);
                 curso = buscar_curso(raiz_cursos, codigo);
-                if (curso)
-                {
+                if (curso != NULL) {
                     printf("Curso encontrado:\n");
                     printf("Codigo: %d\n", curso->codigo);
                     printf("Nome: %s\n", curso->nome);
-                    printf("Periodo: %d\n", curso->periodo);
-                }
-                else
-                {
-                    printf("Curso não encontrado.\n");
+                } else {
+                    printf("Curso nao encontrado.\n");
                 }
                 break;
 
             case 4:
-                printf("Digite o código do curso a ser removido: ");
-                scanf("%d", &codigo);
-                raiz_cursos = remover_curso(raiz_cursos, codigo);
-                break;
-
-            case 5:
-                // Liberar memória e sair
-                // Função para liberar cursos deve ser implementada
-                break;
+                // Finalizar programa
+                // Liberar memoria alocada, se necessario
+                // liberar_alunos(raiz_alunos);
+                // liberar_cursos(raiz_cursos);
+                printf("Saindo...\n");
+                exit(0);
 
             default:
-                printf("Opção inválida.\n");
-                break;
+                printf("Opcao invalida. Tente novamente.\n");
         }
-    } while (opcao != 5);
+    }
 
     return 0;
 }
