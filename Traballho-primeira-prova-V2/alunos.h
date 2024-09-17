@@ -7,8 +7,8 @@ typedef struct aluno
     int matricula;
     char nome[50];
     int codigo_curso;
-    struct arvore_notas *raiz_notas;    // Caso queira implementar mais tarde
-    struct arvore_matriculas *raiz_matriculas; // Caso queira implementar mais tarde
+    struct arvore_notas *raiz_notas;
+    struct arvore_matriculas *raiz_matriculas; 
     struct aluno *prox;
 } Aluno;
 

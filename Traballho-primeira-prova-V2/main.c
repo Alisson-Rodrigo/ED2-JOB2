@@ -39,6 +39,8 @@ int main() {
                 curso = criar_curso();
                 curso->codigo = codigo;
                 strcpy(curso->nome, nome);
+                strcpy(curso->periodo, periodo);
+                
 
                 raiz_cursos = inserir_curso(raiz_cursos, curso);
                 printf("Curso cadastrado com sucesso!\n");
