@@ -5,6 +5,7 @@
 #include "alunos.c"      
 #include "disciplinas.c"
 #include "matricula.c"
+#include "notas.c"
 
 void exibir_menu()
 {
@@ -24,7 +25,9 @@ int main()
     Arvore_curso *raiz_cursos = NULL;
     Aluno *raiz_alunos = NULL;
     int opcao = -1; // Inicialização correta
-    int codigo, codigo_curso, matricula, carga_horaria, periodo;
+    int codigo, codigo_curso, matricula, carga_horaria, periodo, matricula_num;
+    char semestre_cursado[10];
+    float nota;
     char nome[100];
     Aluno *aluno;
     Arvore_curso *curso;
@@ -164,48 +167,47 @@ int main()
                 break;
             }
 
-            arvore_matricula *matricula = criar_matricula();
-            matricula->codigo_disciplina = codigo;
-            inserir_matriculas(aluno->raiz_matriculas, matricula);
+            arvore_matricula *nova_matricula = criar_matricula();
+            nova_matricula->codigo_disciplina = codigo;
+            inserir_matriculas(aluno->raiz_matriculas, nova_matricula);
             printf("Matricula cadastrada com sucesso.\n");
             break;
         case 6:
-            /*
-            Cadastrar Notas, permitir o cadastro de notas somente de disciplinas que estejam na árvore de
-            matricula, e quando a nota for cadastrada a disciplina deve ser removida da árvore de matricula para
-            árvore de notas. 
-            */
+            // Cadastrar Nota
             printf("Digite a matricula do aluno: ");
-            scanf("%d", &raiz_alunos->matricula);
-            aluno = buscar_aluno(raiz_alunos, raiz_alunos->matricula);
+            scanf("%d", &matricula_num);
+            aluno = buscar_aluno(raiz_alunos, matricula_num);
             if (aluno == NULL)
-                {
-                    printf("Matricula nao encontrada.\n");
-                    break;
-                }
-            printf("Digite o codigo da disciplina: ");
+            {
+                printf("Matricula nao encontrada.\n");
+                break;
+            }
+
+            printf("Digite o codigo da disciplina para cadastrar a nota: ");
             scanf("%d", &codigo);
-            //Verificar arvore de matricula do aluno
-            matricula = aluno->raiz_matriculas;
-            disciplina = buscar_matricula(matricula, codigo);
-            if (disciplina == NULL)
-                {
-                    printf("Disciplina nao encontrada.\n");
-                    break;
-                }
-            //Cadastrar notas
-            printf("Digite a nota final do aluno: ");
-            scanf("%f", &aluno->raiz_notas->nota_final);
-            printf("Digite o semestre cursado (ex: 2023.1): ");
-            scanf("%s", aluno->raiz_notas->semestre_cursado);
-            aluno->raiz_notas->codigo_disciplina = codigo;
-            //Inserir notas na arvore de notas
-            aluno->raiz_notas = inserir_nota(aluno->raiz_notas);
-            printf("Nota cadastrada com sucesso.\n");
-            //Remover disciplina da arvore de matricula
+            // Verificar se a disciplina está na árvore de matrículas do aluno
+            if (buscar_matricula(aluno->raiz_matriculas, codigo) == NULL)
+            {
+                printf("Disciplina nao matriculada pelo aluno. Cadastro da nota nao realizado.\n");
+                break;
+            }
+
+            printf("Digite a nota da disciplina: ");
+            scanf("%f", &nota);
+            printf("Digite o semestre cursado: ");
+            scanf("%s", semestre_cursado);
+
+            arvore_notas *nova_nota = criar_nota();
+            nova_nota->codigo_disciplina = codigo;
+            nova_nota->nota_final = nota;
+            strcpy(nova_nota->semestre_cursado, semestre_cursado);
+
+            aluno->raiz_notas = inserir_nota(aluno->raiz_notas, nova_nota);
             aluno->raiz_matriculas = remover_matricula(aluno->raiz_matriculas, codigo);
-            
+
+            printf("Nota cadastrada com sucesso e disciplina removida das matrículas.\n");
             break;
+
         case 0:
             printf("Saindo...\n");
             break;
