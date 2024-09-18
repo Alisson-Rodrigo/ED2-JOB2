@@ -1,5 +1,7 @@
 #ifndef ALUNOS_H
 #define ALUNOS_H
+#include "notas.h"
+#include "matricula.h"
 //#include "ArvoreNotas.h"
 //#include "ArvoreMatriculas.h"
 typedef struct aluno
@@ -7,8 +9,8 @@ typedef struct aluno
     int matricula;
     char nome[50];
     int codigo_curso;
-    struct arvore_notas *raiz_notas;
-    struct arvore_matriculas *raiz_matriculas; 
+    struct arvore_notas *raiz_notas;    // Caso queira implementar mais tarde
+    struct arvore_matriculas *raiz_matriculas; // Caso queira implementar mais tarde
     struct aluno *prox;
 } Aluno;
 

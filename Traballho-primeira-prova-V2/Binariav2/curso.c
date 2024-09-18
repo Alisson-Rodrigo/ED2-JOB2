@@ -133,4 +133,3 @@ Arvore_curso *remover_curso(Arvore_curso *curso, int codigo)
 
 
 }
-

@@ -1,9 +1,9 @@
-#include "alunos.h"
+#include "Alunos.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-struct Aluno;
+
 
 Aluno *criar_aluno(){
     Aluno *a = (Aluno *)malloc(sizeof(Aluno));
