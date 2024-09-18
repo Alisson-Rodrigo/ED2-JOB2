@@ -1,140 +1,160 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "curso.c"   // Inclua o cabeçalho correto para a árvore de cursos
-#include "alunos.c"  // Inclua o cabeçalho correto para a lista de alunos
-#include "matricula.c"  // Inclua o cabeçalho correto para a árvore de matrículas
+#include "curso.c"       // Inclusão correta dos cabeçalhos
+#include "alunos.c"      // Inclusão correta dos cabeçalhos
+#include "disciplinas.c" // Inclusão correta dos cabeçalhos
 
-void exibir_menu() {
+void exibir_menu()
+{
     printf("Menu:\n");
     printf("1. Cadastrar novo curso\n");
-    printf("2. Buscar curso por codigo\n");
-    printf("3. Cadastrar novo aluno\n");
-    printf("4. Buscar aluno por matricula\n");
-    printf("5. Sair\n");
+    printf("2. Cadastrar novo aluno\n");
+    printf("3. Buscar curso por codigo\n");
+    printf("4. Cadastrar nova disciplina\n"); // Adicionado o caso 4
+    printf("0. Sair\n");
     printf("Escolha uma opcao: ");
 }
 
-int main() {
+int main()
+{
     Arvore_curso *raiz_cursos = NULL;
     Aluno *raiz_alunos = NULL;
-    arvore_matricula *raiz_matricula = NULL;
-    int opcao;
-    int codigo, codigo_curso, matricula, max_periodos;
+    int opcao = -1; // Inicialização correta
+    int codigo, codigo_curso, matricula, carga_horaria, periodo;
     char nome[100];
-    Arvore_curso *curso;
     Aluno *aluno;
+    Arvore_curso *curso;
+    arvore_disciplinas *disciplina;
 
-    while (1) {
+    while (opcao != 0)
+    {
         exibir_menu();
         scanf("%d", &opcao);
 
-        switch (opcao) {
-            case 1:
-                // Cadastro de curso
-                printf("Digite o codigo do curso: ");
-                scanf("%d", &codigo);
-                if(buscar_curso(raiz_cursos, codigo) != NULL){
-                    printf("Curso ja cadastrado.\n");
-                    break;
-                }
-                printf("Digite o nome do curso: ");
-                scanf(" %[^\n]", nome);
-                printf("Digite o numero maximo de periodos do curso: ");
-                scanf("%d", &max_periodos);
+        switch (opcao)
+        {
+        case 1:
+            // Cadastro de curso
+            printf("Digite o codigo do curso: ");
+            scanf("%d", &codigo);
+            printf("Digite o nome do curso: ");
+            scanf(" %[^\n]", nome);
+            printf("Digite o periodo do curso: ");
+            scanf("%d", &periodo);
+            curso = criar_curso();
+            curso->codigo = codigo;
+            curso->periodo = periodo;
+            strcpy(curso->nome, nome);
 
-                curso = criar_curso();
-                curso->codigo = codigo;
-                strcpy(curso->nome, nome);
-                curso->periodo = max_periodos;
+            raiz_cursos = inserir_curso(raiz_cursos, curso);
+            printf("Curso cadastrado com sucesso!\n");
+            break;
 
-                raiz_cursos = inserir_curso(raiz_cursos, curso);
-                printf("Curso cadastrado com sucesso!\n");
+        case 2:
+            // Cadastro de aluno
+            printf("Digite a matricula do aluno: ");
+            scanf("%d", &matricula);
+            printf("Digite o nome do aluno: ");
+            scanf(" %[^\n]", nome);
+            printf("Digite o codigo do curso do aluno: ");
+            scanf("%d", &codigo_curso);
+
+            // Verificar se o codigo do curso existe
+            curso = buscar_curso(raiz_cursos, codigo_curso);
+            if (curso == NULL)
+            {
+                printf("Codigo de curso nao encontrado. Cadastro do aluno nao realizado.\n");
                 break;
+            }
 
-            case 2:
-                // Buscar curso
-                printf("Digite o codigo do curso a buscar: ");
-                scanf("%d", &codigo);
+            aluno = criar_aluno();
+            aluno->matricula = matricula;
+            strcpy(aluno->nome, nome);
+            aluno->codigo_curso = codigo_curso;
 
-                curso = buscar_curso(raiz_cursos, codigo);
-                if (curso != NULL) {
-                    printf("Curso encontrado:\n");
-                    printf("Codigo: %d\n", curso->codigo);
-                    printf("Nome: %s\n", curso->nome);
-                    printf("Numero maximo de periodos: %d\n", curso->periodo);
-                } else {
-                    printf("Curso nao encontrado.\n");
-                }
+            raiz_alunos = inserir_aluno(raiz_alunos, aluno);
+            printf("Aluno cadastrado com sucesso!\n");
+            break;
+
+        case 3:
+            // Buscar curso
+            printf("Digite o codigo do curso a buscar: ");
+            scanf("%d", &codigo);
+            curso = buscar_curso(raiz_cursos, codigo);
+            if (curso != NULL)
+            {
+                printf("Curso encontrado:\n");
+                printf("Codigo: %d\n", curso->codigo);
+                printf("Nome: %s\n", curso->nome);
+                printf("Periodo: %d\n", curso->periodo);
+            }
+            else
+            {
+                printf("Curso nao encontrado.\n");
+            }
+            break;
+
+        case 4:
+            // Cadastro de disciplina
+            printf("Digite o codigo do curso da disciplina: ");
+            scanf("%d", &codigo_curso);
+            curso = buscar_curso(raiz_cursos, codigo_curso);
+            if (curso == NULL)
+            {
+                printf("Codigo de curso nao encontrado. Cadastro da disciplina nao realizado.\n");
                 break;
+            }
 
-            case 3:
-                // Cadastro de aluno
-                printf("Digite a matricula do aluno: ");
-                if(buscar_aluno(raiz_alunos, matricula) != NULL){
-                    printf("Aluno ja cadastrado.\n");
-                    break;
-                }
-                scanf("%d", &matricula);
-                printf("Digite o nome do aluno: ");
-                scanf(" %[^\n]", nome);
-                printf("Digite o codigo do curso do aluno: ");
-                scanf("%d", &codigo_curso);
+            printf("Digite o codigo da disciplina: ");
+            scanf("%d", &codigo);
+            printf("Digite o nome da disciplina: ");
+            scanf(" %[^\n]", nome);
+            printf("Digite a carga horaria da disciplina: ");
+            scanf("%d", &carga_horaria);
 
-                // Verificar se o codigo do curso existe
-                curso = buscar_curso(raiz_cursos, codigo_curso);
-                if (curso == NULL) {
-                    printf("Codigo de curso nao encontrado. Cadastro do aluno nao realizado.\n");
-                    break;
-                }
-
-                aluno = criar_aluno();
-                aluno->matricula = matricula;
-                strcpy(aluno->nome, nome);
-                aluno->codigo_curso = codigo_curso;
-
-                raiz_alunos = inserir_aluno(raiz_alunos, aluno);
-                printf("Aluno cadastrado com sucesso!\n");
+            // Validação da carga horária
+            if (carga_horaria < 30 || carga_horaria > 90 || carga_horaria % 15 != 0)
+            {
+                printf("Carga horaria invalida. Cadastro da disciplina nao realizado.\n");
                 break;
+            }
 
-            case 4:
-                // Buscar aluno
-                printf("Digite a matricula do aluno a buscar: ");
-                scanf("%d", &matricula);
+            printf("Digite o periodo da disciplina: ");
+            scanf("%d", &periodo);
 
-                aluno = buscar_aluno(raiz_alunos, matricula);
-                if (aluno != NULL) {
-                    printf("Aluno encontrado:\n");
-                    printf("Matricula: %d\n", aluno->matricula);
-                    printf("Nome: %s\n", aluno->nome);
-                    printf("Codigo do curso: %d\n", aluno->codigo_curso);
-                } else {
-                    printf("Aluno nao encontrado.\n");
-                }
+            // Validação do período
+            if (periodo < 1 || periodo > curso->periodo)
+            {
+                printf("Periodo invalido. Cadastro da disciplina nao realizado.\n");
                 break;
+            }
 
-            case 5:
-                /* ) Cadastrar uma matrícula, onde a mesma é uma árvore organizada e contendo somente um código de
-                uma disciplina do curso do aluno.? */
-                printf("Digite o codigo da disciplina: ");
-                scanf("%d", &codigo);
-                if(buscar_matricula(raiz_matricula, codigo) != NULL){
-                    printf("Disciplina ja cadastrada.\n");
-                    break;
-                }
-                arvore_matricula *no = criar_matricula();
-                no->codigo_disciplina = codigo;
-                raiz_matricula = inserir_matriculas(raiz_matricula, no);
-                printf("Matricula cadastrada com sucesso!\n");
-                break;
-        
-                printf("Saindo...\n");
-                exit(0);
+            // Criar e preencher a disciplina
+            disciplina = criar_disciplina();
+            disciplina->codigo = codigo;
+            strcpy(disciplina->nome, nome);
+            disciplina->carga_horaria = carga_horaria;
+            disciplina->periodo = periodo;
 
-            default:
-                printf("Opcao invalida. Tente novamente.\n");
+            // Inserir a disciplina na árvore de disciplinas do curso
+            curso->raiz_disciplinas = inserir_disciplina(curso->raiz_disciplinas, disciplina);
+            printf("Disciplina cadastrada com sucesso.\n");
+            break;
+        case 5:
+            //cadastrar matricula
+            break;
+        case 0:
+            printf("Saindo...\n");
+            break;
+        default:
+            printf("Opcao invalida. Tente novamente.\n");
         }
     }
+
+    // Liberação de memória (opcional, mas recomendado)
+ 
+    // Assumindo que você tenha uma função para liberar disciplinas em cada curso
 
     return 0;
 }
