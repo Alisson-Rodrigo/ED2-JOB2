@@ -192,20 +192,25 @@ int main()
                 break;
             }
 
+            printf("Digite o semestre cursado: ");
+            scanf("%s", semestre_cursado); // Adicionei a leitura do semestre cursado
+
             printf("Digite a nota da disciplina: ");
             scanf("%f", &nota);
-            printf("Digite o semestre cursado: ");
-            scanf("%s", semestre_cursado);
 
+            // Criar uma nova nota
             arvore_notas *nova_nota = criar_nota();
             nova_nota->codigo_disciplina = codigo;
             nova_nota->nota_final = nota;
-            strcpy(nova_nota->semestre_cursado, semestre_cursado);
+            strcpy(nova_nota->semestre_cursado, semestre_cursado); // Adicionei a atribuição do semestre cursado
 
+            // Inserir a nota na árvore de notas do aluno
             aluno->raiz_notas = inserir_nota(aluno->raiz_notas, nova_nota);
+
+            // Remover a disciplina da árvore de matrículas do aluno
             aluno->raiz_matriculas = remover_matricula(aluno->raiz_matriculas, codigo);
 
-            printf("Nota cadastrada com sucesso e disciplina removida das matrículas.\n");
+            printf("Nota cadastrada com sucesso e disciplina removida das matriculas.\n");
             break;
 
         case 0:
