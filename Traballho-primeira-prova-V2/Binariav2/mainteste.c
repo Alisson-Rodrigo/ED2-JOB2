@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "curso.c"       // Inclusão correta dos cabeçalhos
-#include "alunos.c"      // Inclusão correta dos cabeçalhos
-#include "disciplinas.c" // Inclusão correta dos cabeçalhos
+#include "curso.c"       
+#include "alunos.c"      
+#include "disciplinas.c"
+#include "matricula.c"
 
 void exibir_menu()
 {
@@ -11,7 +12,8 @@ void exibir_menu()
     printf("1. Cadastrar novo curso\n");
     printf("2. Cadastrar novo aluno\n");
     printf("3. Buscar curso por codigo\n");
-    printf("4. Cadastrar nova disciplina\n"); // Adicionado o caso 4
+    printf("4. Cadastrar nova disciplina\n");
+    printf("5. Cadastrar nova matricula\n");
     printf("0. Sair\n");
     printf("Escolha uma opcao: ");
 }
@@ -26,6 +28,7 @@ int main()
     Aluno *aluno;
     Arvore_curso *curso;
     arvore_disciplinas *disciplina;
+    
 
     while (opcao != 0)
     {
@@ -142,8 +145,30 @@ int main()
             printf("Disciplina cadastrada com sucesso.\n");
             break;
         case 5:
-            //cadastrar matricula
+            printf("Digite a matricula do aluno: ");
+            scanf("%d", &matricula);
+            aluno = buscar_aluno(raiz_alunos, matricula);
+            if (aluno == NULL)
+            {
+                printf("Matricula nao encontrada.\n");
+                break;
+            }
+
+            printf("Digite o codigo da disciplina: ");
+            scanf("%d", &codigo);
+            disciplina = buscar_disciplina(curso->raiz_disciplinas, codigo);
+            if (disciplina == NULL)
+            {
+                printf("Disciplina nao encontrada.\n");
+                break;
+            }
+
+            arvore_matricula *matricula = criar_matricula();
+            matricula->codigo_disciplina = codigo;
+            inserir_matriculas(aluno->raiz_matriculas, matricula);
+            printf("Matricula cadastrada com sucesso.\n");
             break;
+
         case 0:
             printf("Saindo...\n");
             break;
