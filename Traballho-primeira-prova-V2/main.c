@@ -3,6 +3,7 @@
 #include <string.h>
 #include "curso.c"   // Inclua o cabeçalho correto para a árvore de cursos
 #include "alunos.c"  // Inclua o cabeçalho correto para a lista de alunos
+#include "matricula.c"  // Inclua o cabeçalho correto para a árvore de matrículas
 
 void exibir_menu() {
     printf("Menu:\n");
@@ -17,6 +18,7 @@ void exibir_menu() {
 int main() {
     Arvore_curso *raiz_cursos = NULL;
     Aluno *raiz_alunos = NULL;
+    arvore_matricula *raiz_matricula = NULL;
     int opcao;
     int codigo, codigo_curso, matricula, max_periodos;
     char nome[100];
@@ -112,10 +114,20 @@ int main() {
                 break;
 
             case 5:
-                // Finalizar programa
-                // Liberar memoria alocada, se necessario
-                // liberar_alunos(raiz_alunos);
-                // liberar_cursos(raiz_cursos);
+                /* ) Cadastrar uma matrícula, onde a mesma é uma árvore organizada e contendo somente um código de
+                uma disciplina do curso do aluno.? */
+                printf("Digite o codigo da disciplina: ");
+                scanf("%d", &codigo);
+                if(buscar_matricula(raiz_matricula, codigo) != NULL){
+                    printf("Disciplina ja cadastrada.\n");
+                    break;
+                }
+                arvore_matricula *no = criar_matricula();
+                no->codigo_disciplina = codigo;
+                raiz_matricula = inserir_matriculas(raiz_matricula, no);
+                printf("Matricula cadastrada com sucesso!\n");
+                break;
+        
                 printf("Saindo...\n");
                 exit(0);
 
