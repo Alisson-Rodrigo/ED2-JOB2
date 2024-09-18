@@ -10,7 +10,7 @@ typedef struct aluno
     char nome[50];
     int codigo_curso;
     struct arvore_notas *raiz_notas;    // Caso queira implementar mais tarde
-    struct arvore_matriculas *raiz_matriculas; // Caso queira implementar mais tarde
+    struct arvore_matricula *raiz_matriculas; // Caso queira implementar mais tarde
     struct aluno *prox;
 } Aluno;
 

@@ -14,6 +14,7 @@ void exibir_menu()
     printf("3. Buscar curso por codigo\n");
     printf("4. Cadastrar nova disciplina\n");
     printf("5. Cadastrar nova matricula\n");
+    printf("6. Cadastrar notas\n");
     printf("0. Sair\n");
     printf("Escolha uma opcao: ");
 }
@@ -168,7 +169,42 @@ int main()
             inserir_matriculas(aluno->raiz_matriculas, matricula);
             printf("Matricula cadastrada com sucesso.\n");
             break;
-
+        case 6:
+            /*
+            Cadastrar Notas, permitir o cadastro de notas somente de disciplinas que estejam na árvore de
+            matricula, e quando a nota for cadastrada a disciplina deve ser removida da árvore de matricula para
+            árvore de notas. 
+            */
+            raiz_alunos = NULL;
+            printf("Digite a matricula do aluno: ");
+            scanf("%d", &raiz_alunos->matricula);
+            aluno = buscar_aluno(raiz_alunos, raiz_alunos->matricula);
+            if (aluno == NULL)
+                {
+                    printf("Matricula nao encontrada.\n");
+                    break;
+                }
+            printf("Digite o codigo da disciplina: ");
+            scanf("%d", &codigo);
+            //Verificar arvore de matricula do aluno
+            matricula = aluno->raiz_matriculas;
+            disciplina = buscar_matricula(matricula, codigo);
+            if (disciplina == NULL)
+                {
+                    printf("Disciplina nao encontrada.\n");
+                    break;
+                }
+            //Cadastrar notas
+            printf("Digite a nota final do aluno: ");
+            scanf("%f", &aluno->raiz_notas->nota_final);
+            printf("Digite o semestre cursado (ex: 2023.1): ");
+            scanf("%s", aluno->raiz_notas->semestre_cursado);
+            aluno->raiz_notas->codigo_disciplina = codigo;
+            printf("Nota cadastrada com sucesso.\n");
+            //Remover disciplina da arvore de matricula
+            aluno->raiz_matriculas = remover_matricula(aluno->raiz_matriculas, codigo);
+            
+            break;
         case 0:
             printf("Saindo...\n");
             break;

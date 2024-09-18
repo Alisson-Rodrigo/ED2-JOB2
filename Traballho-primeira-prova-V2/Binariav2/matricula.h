@@ -9,7 +9,7 @@ typedef struct arvore_matricula {
 } arvore_matricula;
 
 // Funções para manipulação da árvore de matrícula
-
+arvore_matricula *criar_matricula();
 // Função para ler os dados de um nó de matrícula
 void Ler_matricula(arvore_matricula *no);
 

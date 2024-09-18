@@ -78,11 +78,9 @@ Aluno *remover_aluno(Aluno *aluno, int matricula){
 
 Aluno *buscar_aluno(Aluno *aluno, int matricula){
     Aluno *aux = aluno;
-
     while(aux != NULL && aux->matricula != matricula){
         aux = aux->prox;
     }
-
     return aux;
 }
 
