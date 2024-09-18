@@ -175,7 +175,6 @@ int main()
             matricula, e quando a nota for cadastrada a disciplina deve ser removida da árvore de matricula para
             árvore de notas. 
             */
-            raiz_alunos = NULL;
             printf("Digite a matricula do aluno: ");
             scanf("%d", &raiz_alunos->matricula);
             aluno = buscar_aluno(raiz_alunos, raiz_alunos->matricula);
@@ -200,6 +199,8 @@ int main()
             printf("Digite o semestre cursado (ex: 2023.1): ");
             scanf("%s", aluno->raiz_notas->semestre_cursado);
             aluno->raiz_notas->codigo_disciplina = codigo;
+            //Inserir notas na arvore de notas
+            aluno->raiz_notas = inserir_nota(aluno->raiz_notas);
             printf("Nota cadastrada com sucesso.\n");
             //Remover disciplina da arvore de matricula
             aluno->raiz_matriculas = remover_matricula(aluno->raiz_matriculas, codigo);
