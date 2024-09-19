@@ -185,7 +185,6 @@ int main()
 
             printf("Digite o codigo da disciplina para cadastrar a nota: ");
             scanf("%d", &codigo);
-            // Verificar se a disciplina está na árvore de matrículas do aluno
             if (buscar_matricula(aluno->raiz_matriculas, codigo) == NULL)
             {
                 printf("Disciplina nao matriculada pelo aluno. Cadastro da nota nao realizado.\n");
