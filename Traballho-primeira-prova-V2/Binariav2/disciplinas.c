@@ -156,6 +156,7 @@ void imprimir_historico_disciplinas(arvore_notas *raiz_notas, arvore_disciplinas
             printf("Nota: %.2f\n", nota->nota_final);
             printf("Semestre cursado: %s\n", nota->semestre_cursado);
             printf("Carga horaria: %d\n", raiz_disciplinas->carga_horaria);
+            printf("Periodo: %d\n", raiz_disciplinas->periodo);
             printf("\n");
         }
 

@@ -132,8 +132,6 @@ Arvore_curso *remover_curso(Arvore_curso *curso, int codigo)
         }
     }
     return curso;
-
-
 }
 
 void imprimir_historico(Aluno *aluno, Arvore_curso *raiz_cursos)
