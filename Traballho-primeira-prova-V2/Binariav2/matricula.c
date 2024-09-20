@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "matricula.h"
+#include "Alunos.h"
 
 
 struct arvore_matricula;
@@ -120,4 +121,18 @@ arvore_matricula *remover_matricula(arvore_matricula *raiz, int codigo_disciplin
         }
     }
     return raiz;
+}
+
+int verificar_alunos_matriculados(Aluno *raiz_alunos, int codigo)
+{
+    if (raiz_alunos != NULL)
+    {
+        if (raiz_alunos->codigo_curso == codigo)
+        {
+            return 1;
+        }
+        return verificar_alunos_matriculados(raiz_alunos->prox, codigo) + verificar_alunos_matriculados(raiz_alunos->prox, codigo);
+    }
+
+    return 0;
 }
