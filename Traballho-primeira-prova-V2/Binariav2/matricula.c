@@ -123,15 +123,4 @@ arvore_matricula *remover_matricula(arvore_matricula *raiz, int codigo_disciplin
     return raiz;
 }
 
-int verificar_alunos_matriculados(Aluno *raiz_alunos, int codigo)
-{
-    if (raiz_alunos != NULL)
-    {
-        if (raiz_alunos->codigo_curso == codigo)
-        {
-            return 1;
-        }
-        return verificar_alunos_matriculados(raiz_alunos->esq, codigo) || verificar_alunos_matriculados(raiz_alunos->dir, codigo);
-    }
-    return 0;
-}
+

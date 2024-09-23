@@ -26,8 +26,6 @@ arvore_matricula *buscar_matricula(arvore_matricula *raiz, int codigo_disciplina
 // Função para remover uma matrícula da árvore pelo código da disciplina
 arvore_matricula *remover_matricula(arvore_matricula *raiz, int codigo_disciplina);
 
-// Função para liberar a memória alocada para a árvore de matrículas
-int verificar_alunos_matriculados(Aluno *raiz_alunos, int codigo);
 
 
 #endif // MATRICULA_H
