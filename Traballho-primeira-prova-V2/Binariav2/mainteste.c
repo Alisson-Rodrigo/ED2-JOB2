@@ -350,21 +350,22 @@ int main()
             }
             printf("Digite o codigo da disciplina: ");
             scanf("%d", &codigo);
-            if (buscar_disciplina(curso->raiz_disciplinas, codigo) == NULL)
+            arvore_disciplinas *disciplina = buscar_disciplina(curso->raiz_disciplinas, codigo);
+            if (disciplina == NULL)
             {
                 printf("Disciplina nao encontrada.\n");
                 break;
             }
-            //verificar se a disciplina tem alunos matriculados
-            if (verificar_alunos_matriculados(raiz_alunos, codigo))
+            if (disciplina->esq == NULL && disciplina->dir == NULL)
             {
-                printf("Disciplina possui alunos matriculados. Remocao nao realizada.\n");
-                break;
+                curso->raiz_disciplinas = remover_disciplina(curso->raiz_disciplinas, codigo);
+                printf("Disciplina removida com sucesso.\n");
             }
-            curso->raiz_disciplinas = remover_disciplina(curso->raiz_disciplinas, codigo);
-            printf("Disciplina removida com sucesso.\n");
+            else
+            {
+                printf("Disciplina nao pode ser removida pois ha alunos matriculados.\n");
+            }
             break;
-
         case 15:
             //Permita remover uma disciplina da árvore de matrícula de um determinado aluno. 
             printf("Digite a matricula do aluno: ");
