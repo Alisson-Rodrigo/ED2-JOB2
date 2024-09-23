@@ -4,15 +4,7 @@
 #include "matricula.h"
 //#include "ArvoreNotas.h"
 //#include "ArvoreMatriculas.h"
-typedef struct aluno
-{
-    int matricula;
-    char nome[50];
-    int codigo_curso;
-    struct Arvore_notas *raiz_notas;    // Caso queira implementar mais tarde
-    struct arvore_matricula *raiz_matriculas; // Caso queira implementar mais tarde
-    struct aluno *prox;
-} Aluno;
+typedef struct aluno Aluno;
 
 // Função para criar um novo aluno
 Aluno *criar_aluno();

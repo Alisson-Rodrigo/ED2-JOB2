@@ -3,7 +3,15 @@
 #include <stdio.h>
 #include <string.h>
 
-
+struct aluno
+{
+    int matricula;
+    char nome[50];
+    int codigo_curso;
+    struct Arvore_notas *raiz_notas;    // Caso queira implementar mais tarde
+    struct arvore_matricula *raiz_matriculas; // Caso queira implementar mais tarde
+    struct aluno *prox;
+};
 
 Aluno *criar_aluno(){
     Aluno *a = (Aluno *)malloc(sizeof(Aluno));

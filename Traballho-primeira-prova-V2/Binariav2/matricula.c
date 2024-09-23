@@ -131,8 +131,7 @@ int verificar_alunos_matriculados(Aluno *raiz_alunos, int codigo)
         {
             return 1;
         }
-        return verificar_alunos_matriculados(raiz_alunos->prox, codigo) + verificar_alunos_matriculados(raiz_alunos->prox, codigo);
+        return verificar_alunos_matriculados(raiz_alunos->esq, codigo) || verificar_alunos_matriculados(raiz_alunos->dir, codigo);
     }
-
     return 0;
 }
