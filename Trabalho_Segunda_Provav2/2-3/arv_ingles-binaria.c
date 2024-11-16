@@ -110,4 +110,3 @@ void imprimirTraducoes(TreeNode *node, const char *palavraPortugues, int *primei
         imprimirTraducoes(node->right, palavraPortugues, primeira);
     }
 }
-

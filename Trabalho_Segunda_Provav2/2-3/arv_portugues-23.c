@@ -47,6 +47,14 @@ void endereco(Tree23Node *nodo) {
         printf("0x%p\n", (void*)nodo);
 }
 
+Info criarInfo(const char *palavraPortugues, int unidade) {
+    Info novoInfo;
+    strncpy(novoInfo.portugueseWord, palavraPortugues, 50);
+    novoInfo.portugueseWord[49] = '\0';
+    novoInfo.englishTreeRoot = NULL; // Inicializa a árvore de traduções em inglês
+    novoInfo.unit = unidade;         // Define a unidade
+    return novoInfo;
+}
 // Função para criar um novo nó na árvore 2-3 com as informações fornecidas
 Tree23Node* criarNodo23(Info info1, Info info2, int qtdDados, Tree23Node *pai, Tree23Node *esq, Tree23Node *meio, Tree23Node *dir) {
     Tree23Node *novoNodo = (Tree23Node*) malloc(sizeof(Tree23Node));
@@ -575,21 +583,6 @@ void imprimirInfoUnidade(Tree23Node *arvore, int unidade) {
     }
 }
 
-
-Info criarInfo(const char *palavraPortugues, int unidade) {
-    Info novoInfo;
-    strncpy(novoInfo.portugueseWord, palavraPortugues, 50);
-    novoInfo.portugueseWord[49] = '\0';
-    novoInfo.englishTreeRoot = NULL; // Inicializa a árvore de traduções em inglês
-    novoInfo.unit = unidade;         // Define a unidade
-    return novoInfo;
-}
-
-// Função para adicionar uma tradução em inglês na árvore binária dentro de `Info`
-void adicionarTraducao(Info *info, const char *traducaoIngles, int unit) {
-    info->englishTreeRoot = insertEnglishWord(info->englishTreeRoot, traducaoIngles, unit);
-}
-
 void imprimirArvorePorUnidade(Tree23Node *arvore) {
     int unidade = 1;
     while (1) {
@@ -600,29 +593,9 @@ void imprimirArvorePorUnidade(Tree23Node *arvore) {
     }
 }
 
-// informar uma unidade e então imprima todas as palavras da unidade em português seguida das equivalentes em inglês
-void imprimirPorDadaUnidadeTraducoes(Tree23Node *arvore, int unidade) {
-    printf("%% Unidade %d\n", unidade);
-    imprimirInfoUnidade(arvore, unidade);
-    printf("\n");
+
+
+// Função para adicionar uma tradução em inglês na árvore binária dentro de `Info`
+void adicionarTraducao(Info *info, const char *traducaoIngles, int unit) {
+    info->englishTreeRoot = insertEnglishWord(info->englishTreeRoot, traducaoIngles, unit);
 }
-
-// Informar uma palavra em português e então imprima todas as palavras em inglês equivalente a palavra em português dada, independente da unidade
-void imprimirTraducoesEmIngles(Tree23Node *arvore, const char *palavraPortugues) {
-    Tree23Node **nodo = NULL;
-    Tree23Node *irmao = NULL;
-
-    nodo = buscarValorArvore(&arvore, palavraPortugues, &irmao);
-    if (*nodo) {
-        printf("Traduções em inglês para a palavra '%s':\n", palavraPortugues);
-        if ((*nodo)->nInfos == 2) {
-            printBinaryTree((*nodo)->info1.englishTreeRoot);
-            printBinaryTree((*nodo)->info2.englishTreeRoot);
-        } else {
-            printBinaryTree((*nodo)->info1.englishTreeRoot);
-        }
-    } else {
-        printf("Palavra '%s' não encontrada.\n", palavraPortugues);
-    }
-}
-
