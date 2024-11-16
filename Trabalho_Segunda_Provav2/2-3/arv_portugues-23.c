@@ -625,3 +625,4 @@ void imprimirTraducoesEmIngles(Tree23Node *arvore, const char *palavraPortugues)
         printf("Palavra '%s' não encontrada.\n", palavraPortugues);
     }
 }
+
