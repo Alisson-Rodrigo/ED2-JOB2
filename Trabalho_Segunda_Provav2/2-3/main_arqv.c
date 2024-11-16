@@ -12,37 +12,39 @@ void carregarArquivo(const char *nomeArquivo, Tree23Node **arvore) {
     }
 
     char linha[256];
-    int unidadeAtual = 0;
+    int unidadeAtual = 0; // Variável para armazenar a unidade atual
 
     while (fgets(linha, sizeof(linha), arquivo)) {
         // Remove a quebra de linha ao final
         linha[strcspn(linha, "\n")] = 0;
+
         // Verifica se é uma linha de unidade
         if (linha[0] == '%') {
             sscanf(linha, "%% Unidade %d", &unidadeAtual);
         } else {
-            // Processar linha com palavra em português e traduções
-            char palavraPortugues[50];
-            char traducoes[200];
+            // Processar linha com palavra em inglês e traduções em português
+            char palavraIngles[50];
+            char traducoesPortugues[200];
 
-            if (sscanf(linha, "%[^:]: %[^\n]", traducoes, palavraPortugues) == 2) {
-                // Cria um novo Info para a palavra em português
-                Info novoInfo = criarInfo(palavraPortugues, unidadeAtual);
+            if (sscanf(linha, "%[^:]: %[^\n]", palavraIngles, traducoesPortugues) == 2) {
+                // Processar cada tradução em português
+                char *traducaoPortugues = strtok(traducoesPortugues, ",;");
+                while (traducaoPortugues != NULL) {
+                    // Remove espaços em branco no início da tradução
+                    while (*traducaoPortugues == ' ') traducaoPortugues++;
 
-                // Processar traduções separadas por vírgula ou ponto e vírgula
-                char *traducao = strtok(traducoes, ",;");
-                while (traducao != NULL) {
-                    // Remove espaços em branco no início
-                    while (*traducao == ' ') traducao++;
+                    // Cria um novo Info para a tradução em português
+                    Info novoInfo = criarInfo(traducaoPortugues, unidadeAtual);
 
-                    // Adiciona tradução à árvore binária no Info
-                    adicionarTraducao(&novoInfo, traducao, unidadeAtual);
+                    // Adiciona a palavra em inglês na árvore binária associada
+                    adicionarTraducao(&novoInfo, palavraIngles, unidadeAtual);
 
-                    traducao = strtok(NULL, ",;");
+                    // Insere o Info (com a árvore binária preenchida) na árvore 2-3
+                    inserirValorArvore(arvore, novoInfo);
+
+                    // Próxima tradução
+                    traducaoPortugues = strtok(NULL, ",;");
                 }
-
-                // Insere o Info (com a árvore binária preenchida) na árvore 2-3
-                inserirValorArvore(arvore, novoInfo);
             }
         }
     }
@@ -86,6 +88,7 @@ int main() {
     carregarArquivo("C:/Users/PurooLight/Documents/GitHub/ED2-JOB2/Trabalho_Segunda_Provav2/2-3/arqv.txt", &arvore23);
 
     // Exibir os valores da árvore 2-3
+    printf("Árvore 2-3 carregada:\n");
     exibirArvore23(arvore23);
 
     return 0;
