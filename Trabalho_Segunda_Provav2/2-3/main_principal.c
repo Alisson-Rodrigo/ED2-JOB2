@@ -83,6 +83,7 @@ int main() {
                 scanf("%s", palavraPortugues);
                 printf("Digite a unidade: ");
                 scanf("%d", &unidade);
+                
                 break;
             case 6:
                 // Finalizar o programa

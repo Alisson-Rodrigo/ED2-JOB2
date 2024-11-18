@@ -52,20 +52,20 @@ void printBinaryTree(TreeNode* root) {
     }
 }
 
-TreeNode* removeEnglishWord(TreeNode* root, const char* word) {
+TreeNode* removeEnglishWord(TreeNode* root, const char* word, int unit) {
     if (root != NULL) {
         if (strcmp(word, root->englishWord) < 0) {
             // A palavra a ser removida está na subárvore esquerda
-            root->left = removeEnglishWord(root->left, word);
+            root->left = removeEnglishWord(root->left, word, unit);
         } else if (strcmp(word, root->englishWord) > 0) {
             // A palavra a ser removida está na subárvore direita
-            root->right = removeEnglishWord(root->right, word);
-        } else {
-            // Encontrou o nó a ser removido
+            root->right = removeEnglishWord(root->right, word, unit);
+        } else if (root->unit == unit) {
+            // Encontrou o nó a ser removido e a unidade corresponde
             if (root->left == NULL && root->right == NULL) {
-                // Caso 1: O nó é uma folha
+                // Caso 1: O nó é uma folha e é o único elemento na árvore
                 free(root);
-                root = NULL;
+                root = NULL; // Retorna NULL para indicar que a árvore está vazia
             } else if (root->left == NULL) {
                 // Caso 2: O nó tem apenas um filho à direita
                 TreeNode* aux = root;
@@ -87,12 +87,13 @@ TreeNode* removeEnglishWord(TreeNode* root, const char* word) {
                 strcpy(root->englishWord, aux->englishWord);
                 root->unit = aux->unit;
                 // Remover o nó duplicado da subárvore esquerda
-                root->left = removeEnglishWord(root->left, aux->englishWord);
+                root->left = removeEnglishWord(root->left, aux->englishWord, aux->unit);
             }
         }
     }
     return root;
 }
+
 
 void imprimirTraducoes(TreeNode *node, const char *palavraPortugues, int *primeira) {
     if (node) {
