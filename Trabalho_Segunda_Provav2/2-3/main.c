@@ -4,6 +4,7 @@
 #include "arv_portugues-23.c"
 #include "arv_ingles-binaria.c"
 
+// Função para carregar o arquivo com as palavras e traduções
 void carregarArquivo(const char *nomeArquivo, Tree23Node **arvore) {
     FILE *arquivo = fopen(nomeArquivo, "r");
     if (arquivo == NULL) {
@@ -48,10 +49,9 @@ void carregarArquivo(const char *nomeArquivo, Tree23Node **arvore) {
             }
         }
     }
+
     fclose(arquivo);
 }
-
-
 
 // Função auxiliar para exibir palavras de uma unidade específica
 void exibirPalavrasPorUnidade(Tree23Node *arvore, int unidade) {
@@ -61,13 +61,13 @@ void exibirPalavrasPorUnidade(Tree23Node *arvore, int unidade) {
 
         // Verifica e exibe palavras da unidade na info1
         if (arvore->info1.unit == unidade) {
-            printf("%s: ", arvore->info1.portugueseWord);
+            printf("%s:", arvore->info1.portugueseWord); // Exibe palavra em português
             printBinaryTree(arvore->info1.englishTreeRoot); // Exibe traduções associadas
         }
 
         // Verifica e exibe palavras da unidade na info2 (se existir)
         if (arvore->nInfos == 2 && arvore->info2.unit == unidade) {
-            printf("%s: ", arvore->info2.portugueseWord);
+            printf("%s:", arvore->info2.portugueseWord); // Exibe palavra em português
             printBinaryTree(arvore->info2.englishTreeRoot); // Exibe traduções associadas
         }
 
@@ -79,6 +79,18 @@ void exibirPalavrasPorUnidade(Tree23Node *arvore, int unidade) {
     }
 }
 
+// Função para verificar se há palavras para a unidade atual
+void verificarUnidade(Tree23Node *no, int unidade, int *temPalavras) {
+    if (no) {
+        if (no->info1.unit == unidade || (no->nInfos == 2 && no->info2.unit == unidade)) {
+            *temPalavras = 1;
+        }
+        verificarUnidade(no->left, unidade, temPalavras);
+        verificarUnidade(no->middle, unidade, temPalavras);
+        if (no->nInfos == 2) verificarUnidade(no->right, unidade, temPalavras);
+    }
+}
+
 // Função principal para exibir a árvore no formato do arquivo
 void exibirArvoreFormatoArquivo(Tree23Node *arvore) {
     int unidade = 1;
@@ -87,17 +99,7 @@ void exibirArvoreFormatoArquivo(Tree23Node *arvore) {
         int temPalavras = 0;
 
         // Percorre a árvore para verificar se há palavras nessa unidade
-        void verificarUnidade(Tree23Node *no) {
-            if (no) {
-                if (no->info1.unit == unidade || (no->nInfos == 2 && no->info2.unit == unidade)) {
-                    temPalavras = 1;
-                }
-                verificarUnidade(no->left);
-                verificarUnidade(no->middle);
-                if (no->nInfos == 2) verificarUnidade(no->right);
-            }
-        }
-        verificarUnidade(arvore);
+        verificarUnidade(arvore, unidade, &temPalavras);
 
         // Se não houver mais palavras para exibir, interrompe o loop
         if (!temPalavras) break;
@@ -118,7 +120,7 @@ int main() {
     Tree23Node *arvore23 = NULL;
 
     // Carregar o arquivo de palavras
-    carregarArquivo("C:/Users/PurooLight/Documents/GitHub/EstruturaDeDadosII-GRUPO/Trabalho_Segunda_Provav2/2-3/vocabulario.txt", &arvore23);
+    carregarArquivo("C:/Users/jorge/OneDrive/Documentos/GitHub/EstruturaDeDadosII/Trabalho_Segunda_Provav2/2-3/vocabulario.txt", &arvore23);
 
     // Exibir os valores da árvore 2-3
     printf("Árvore 2-3 carregada:\n");
@@ -126,7 +128,3 @@ int main() {
 
     return 0;
 }
-
-
-
-
