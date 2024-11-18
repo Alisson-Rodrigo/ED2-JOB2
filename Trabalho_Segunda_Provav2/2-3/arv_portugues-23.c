@@ -240,16 +240,18 @@ Tree23Node** buscarValorArvore(Tree23Node **arvore, const char *valor, Tree23Nod
     }
     return nodo;
 }
-
-void removerValorNodo(Tree23Node **nodo, int valor) {
-    if(*nodo) {
-        if((*nodo)->nInfos == 1) {
+void removerValorNodo(Tree23Node **nodo, const char *valor) {
+    if (*nodo) {
+        if ((*nodo)->nInfos == 1) {
+            // Se o nó tem apenas um valor, remove e libera o nó
             free(*nodo);
             *nodo = NULL;
         } else {
-            if(valor == (*nodo)->info1)
-                (*nodo)->info1 = (*nodo)->info2;
-            (*nodo)->nInfos = 1;
+            // Se o nó tem dois valores, remove o valor correto e ajusta `info1` e `info2`
+            if (strcmp(valor, (*nodo)->info1.portugueseWord) == 0) {
+                (*nodo)->info1 = (*nodo)->info2;  // Move `info2` para `info1`
+            }
+            (*nodo)->nInfos = 1;  // Reduz o número de informações no nó para 1
         }
     }
 }
@@ -479,37 +481,31 @@ Tree23Node** reconfigArvore(Tree23Node **remover, Tree23Node *irmao) {
 }
 
 // Função para remover um valor da árvore 2-3
-void removerValorArvore(Tree23Node **arvore, int valor) {
-        Tree23Node **remover = NULL;
-        Tree23Node *irmao = NULL;
-        if(*arvore) {
-                remover = arvore;
-                while(*remover && !estaNodo(*remover, valor)) {
-                        irmao = (*remover)->middle;
-                        if((*remover)->nInfos == 2 && valor > (*remover)->info2)
-                                remover = &((*remover)->right);
-                        else if(valor < (*remover)->info1)
-                                remover = &((*remover)->left);
-                        else {
-                                irmao = (*remover)->left;
-                                remover = &((*remover)->middle);
-                        }
-                }
-                while(remover && *remover) {
-                        if(ehFolha(*remover)) {
-                                if(ehRaiz(*remover) || estaCheio(*remover))
-                                        removerValorNodo(remover, valor);
-                                else {
-                                        remover = reconfigArvore(remover, irmao);
-                                        removerValorNodo(remover, valor);
-                                }
-                                remover = NULL;
-                        } else
-                                remover = trocarValoresArvore(remover, valor, &irmao);
-                }
-        }
-}
+void removerValorArvore(Tree23Node **arvore, const char *valor) {
+    Tree23Node **remover = NULL;
+    Tree23Node *irmao = NULL;
 
+    if (*arvore) {
+        remover = buscarValorArvore(arvore, valor, &irmao);
+
+        while (remover) {
+            if (ehFolha(*remover)) {
+                // Se é uma folha, remove diretamente
+                if (ehRaiz(*remover) || estaCheio(*remover)) {
+                    removerValorNodo(remover, valor);
+                } else {
+                    // Reconfigura a árvore antes de remover o valor
+                    remover = reconfigArvore(remover, irmao);
+                    removerValorNodo(remover, valor);
+                }
+                remover = NULL;
+            } else {
+                // Se não é folha, troca os valores para transformar o nó em folha
+                remover = trocarValoresArvore(remover, valor, &irmao);
+            }
+        }
+    }
+}
 void limparArvore(Tree23Node **arvore) {
     if (*arvore) {
         limparArvore(&((*arvore)->left));
@@ -602,22 +598,4 @@ void imprimirArvorePorUnidade(Tree23Node *arvore) {
 // Função para adicionar uma tradução em inglês na árvore binária dentro de `Info`
 void adicionarTraducao(Info *info, const char *traducaoIngles, int unit) {
     info->englishTreeRoot = insertEnglishWord(info->englishTreeRoot, traducaoIngles, unit);
-}
-
-
-void imprimirArvorePorUnidade(Tree23Node *arvore) {
-    int unidade = 1;
-    while (1) {
-        printf("%% Unidade %d\n", unidade);
-        imprimirInfoUnidade(arvore, unidade);
-        if (unidade++ >= 2) break; // Limite para testar as primeiras duas unidades
-        printf("\n");
-    }
-}
-
-// informar uma unidade e então imprima todas as palavras da unidade em português seguida das equivalentes em inglês
-void imprimirPorDadaUnidadeTraducoes(Tree23Node *arvore, int unidade) {
-    printf("%% Unidade %d\n", unidade);
-    imprimirInfoUnidade(arvore, unidade);
-    printf("\n");
 }
