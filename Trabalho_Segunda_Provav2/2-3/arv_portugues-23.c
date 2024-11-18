@@ -603,3 +603,21 @@ void imprimirArvorePorUnidade(Tree23Node *arvore) {
 void adicionarTraducao(Info *info, const char *traducaoIngles, int unit) {
     info->englishTreeRoot = insertEnglishWord(info->englishTreeRoot, traducaoIngles, unit);
 }
+
+
+void imprimirArvorePorUnidade(Tree23Node *arvore) {
+    int unidade = 1;
+    while (1) {
+        printf("%% Unidade %d\n", unidade);
+        imprimirInfoUnidade(arvore, unidade);
+        if (unidade++ >= 2) break; // Limite para testar as primeiras duas unidades
+        printf("\n");
+    }
+}
+
+// informar uma unidade e então imprima todas as palavras da unidade em português seguida das equivalentes em inglês
+void imprimirPorDadaUnidadeTraducoes(Tree23Node *arvore, int unidade) {
+    printf("%% Unidade %d\n", unidade);
+    imprimirInfoUnidade(arvore, unidade);
+    printf("\n");
+}
