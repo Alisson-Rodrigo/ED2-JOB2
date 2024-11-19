@@ -1,12 +1,119 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-// Inclua os cabeçalhos das suas árvores 2-3 e binária
 #include "arv_portugues-23.c"
 #include "arv_ingles-binaria.c"
 
-// Funções auxiliares e de impressão (implemente conforme necessário)
+// Função para carregar o arquivo com as palavras e traduções
+void carregarArquivo(const char *nomeArquivo, Tree23Node **arvore) {
+    FILE *arquivo = fopen(nomeArquivo, "r");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    char linha[256];
+    int unidadeAtual = 0; // Variável para armazenar a unidade atual
+
+    while (fgets(linha, sizeof(linha), arquivo)) {
+        // Remove a quebra de linha ao final
+        linha[strcspn(linha, "\n")] = 0;
+
+        // Verifica se é uma linha de unidade
+        if (linha[0] == '%') {
+            sscanf(linha, "%% Unidade %d", &unidadeAtual);
+        } else {
+            // Processar linha com palavra em inglês e traduções em português
+            char palavraIngles[50];
+            char traducoesPortugues[200];
+
+            if (sscanf(linha, "%[^:]: %[^\n]", palavraIngles, traducoesPortugues) == 2) {
+                // Processar cada tradução em português
+                char *traducaoPortugues = strtok(traducoesPortugues, ",;");
+                while (traducaoPortugues != NULL) {
+                    // Remove espaços em branco no início da tradução
+                    while (*traducaoPortugues == ' ') traducaoPortugues++;
+
+                    // Cria um novo Info para a tradução em português
+                    Info novoInfo = criarInfo(traducaoPortugues, unidadeAtual);
+
+                    // Adiciona a palavra em inglês na árvore binária associada
+                    adicionarTraducao(&novoInfo, palavraIngles, unidadeAtual);
+
+                    // Insere o Info (com a árvore binária preenchida) na árvore 2-3
+                    inserirValorArvore(arvore, novoInfo);
+
+                    // Próxima tradução
+                    traducaoPortugues = strtok(NULL, ",;");
+                }
+            }
+        }
+    }
+
+    fclose(arquivo);
+}
+
+// Função auxiliar para exibir palavras de uma unidade específica
+void exibirPalavrasPorUnidade(Tree23Node *arvore, int unidade) {
+    if (arvore) {
+        // Percorre a subárvore esquerda
+        exibirPalavrasPorUnidade(arvore->left, unidade);
+
+        // Verifica e exibe palavras da unidade na info1
+        if (arvore->info1.unit == unidade) {
+            printf("%s:", arvore->info1.portugueseWord); // Exibe palavra em português
+            printBinaryTree(arvore->info1.englishTreeRoot); // Exibe traduções associadas
+        }
+
+        // Verifica e exibe palavras da unidade na info2 (se existir)
+        if (arvore->nInfos == 2 && arvore->info2.unit == unidade) {
+            printf("%s:", arvore->info2.portugueseWord); // Exibe palavra em português
+            printBinaryTree(arvore->info2.englishTreeRoot); // Exibe traduções associadas
+        }
+
+        // Percorre as subárvores do meio e direita
+        exibirPalavrasPorUnidade(arvore->middle, unidade);
+        if (arvore->nInfos == 2) {
+            exibirPalavrasPorUnidade(arvore->right, unidade);
+        }
+    }
+}
+
+// Função para verificar se há palavras para a unidade atual
+void verificarUnidade(Tree23Node *no, int unidade, int *temPalavras) {
+    if (no) {
+        if (no->info1.unit == unidade || (no->nInfos == 2 && no->info2.unit == unidade)) {
+            *temPalavras = 1;
+        }
+        verificarUnidade(no->left, unidade, temPalavras);
+        verificarUnidade(no->middle, unidade, temPalavras);
+        if (no->nInfos == 2) verificarUnidade(no->right, unidade, temPalavras);
+    }
+}
+
+// Função principal para exibir a árvore no formato do arquivo
+void exibirArvoreFormatoArquivo(Tree23Node *arvore) {
+    int unidade = 1;
+    while (1) {
+        // Verifica se há palavras para a unidade atual
+        int temPalavras = 0;
+
+        // Percorre a árvore para verificar se há palavras nessa unidade
+        verificarUnidade(arvore, unidade, &temPalavras);
+
+        // Se não houver mais palavras para exibir, interrompe o loop
+        if (!temPalavras) break;
+
+        // Exibe o cabeçalho da unidade
+        printf("%% Unidade %d\n", unidade);
+
+        // Exibe as palavras da unidade atual
+        exibirPalavrasPorUnidade(arvore, unidade);
+
+        // Passa para a próxima unidade
+        unidade++;
+    }
+}
 
 // Função para exibir o menu de opções
 void exibirMenu() {
@@ -29,24 +136,8 @@ int main() {
     char palavraPortugues[50];
     char palavraIngles[50];
 
-    // Criação de exemplos para unidade 1
-    Info busInfo = criarInfo("onibus", 1);
-    adicionarTraducao(&busInfo, "Bus", 1);
-    adicionarTraducao(&busInfo, "Coach", 1); // Outra tradução
-    inserirValorArvore(&arvore, busInfo);
-
-    Info bugInfo = criarInfo("inseto", 1);
-    adicionarTraducao(&bugInfo, "Bug", 1);
-    inserirValorArvore(&arvore, bugInfo);
-
-    Info systemInfo = criarInfo("sistema", 1);
-    adicionarTraducao(&systemInfo, "System", 1);
-    inserirValorArvore(&arvore, systemInfo);
-
-    // Criação de exemplos para unidade 2
-    Info bikeInfo = criarInfo("bicicleta", 2);
-    adicionarTraducao(&bikeInfo, "Bicycle", 2);
-    inserirValorArvore(&arvore, bikeInfo);
+    // Carregar o arquivo de palavras
+    carregarArquivo("C:/Users/purolight/Documents/GitHub/ED2-JOB2/Trabalho_Segunda_Provav2/2-3/vocabulario.txt", &arvore);
 
     // Loop principal do menu
     while (opcao != 6) {
@@ -79,10 +170,13 @@ int main() {
                 break;
             case 5:
                 // (v) Remover uma palavra em português de uma unidade específica
-                printf("Digite a palavra em português: ");
+                printf("Digite a palavra em português para remover: ");
+                printf("Digite a palavra em português para remover: ");
                 scanf("%s", palavraPortugues);
                 printf("Digite a unidade: ");
                 scanf("%d", &unidade);
+
+                removerPalavraPortugues(&arvore, palavraPortugues, unidade);
                 
                 break;
             case 6:

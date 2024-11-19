@@ -115,7 +115,6 @@ void exibirArvoreFormatoArquivo(Tree23Node *arvore) {
     }
 }
 
-
 int main() {
     Tree23Node *arvore23 = NULL;
     char palavraIngles[50];
