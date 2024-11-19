@@ -563,7 +563,6 @@ void imprimirArvore(Tree23Node *arvore, int nivel) {
 }
 
 
-
 void imprimirInfoUnidade(Tree23Node *arvore, int unidade) {
     if (arvore) {
         // Percorre a árvore e imprime apenas as palavras da unidade especificada
@@ -592,7 +591,6 @@ void imprimirArvorePorUnidade(Tree23Node *arvore) {
         printf("\n");
     }
 }
-
 
 
 // Função para adicionar uma tradução em inglês na árvore binária dentro de `Info`

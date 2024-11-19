@@ -144,7 +144,6 @@ int main() {
     removerPalavraPortugues(&arvore23, palavraPortugues, unidade);
 
 
-
     // Exibir os valores da árvore 2-3
     printf("Árvore 2-3 após remoção:\n");
     exibirArvoreFormatoArquivo(arvore23);
