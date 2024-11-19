@@ -118,13 +118,37 @@ void exibirArvoreFormatoArquivo(Tree23Node *arvore) {
 
 int main() {
     Tree23Node *arvore23 = NULL;
+    char palavraIngles[50];
+    char palavraPortugues[50]; 
+    int unidade;
 
     // Carregar o arquivo de palavras
-    carregarArquivo("C:/Users/jorge/OneDrive/Documentos/GitHub/EstruturaDeDadosII/Trabalho_Segunda_Provav2/2-3/vocabulario.txt", &arvore23);
+    carregarArquivo("C:/Users/purolight/Documents/GitHub/ED2-JOB2/Trabalho_Segunda_Provav2/2-3/vocabulario.txt", &arvore23);
 
     // Exibir os valores da árvore 2-3
     printf("Árvore 2-3 carregada:\n");
     exibirArvoreFormatoArquivo(arvore23);
+
+    printf("Digite a palavra em inglês: ");
+    scanf("%s", palavraIngles);
+    printf("Digite a unidade: ");
+    scanf("%d", &unidade);
+    removerPalavraIngles(&arvore23, palavraIngles, unidade);
+
+    printf("Digite a palavra em português para remover: ");
+    printf("Digite a palavra em português para remover: ");
+    scanf("%s", palavraPortugues);
+    printf("Digite a unidade: ");
+    scanf("%d", &unidade);
+
+    removerPalavraPortugues(&arvore23, palavraPortugues, unidade);
+
+
+
+    // Exibir os valores da árvore 2-3
+    printf("Árvore 2-3 após remoção:\n");
+    exibirArvoreFormatoArquivo(arvore23);
+    
 
     return 0;
 }

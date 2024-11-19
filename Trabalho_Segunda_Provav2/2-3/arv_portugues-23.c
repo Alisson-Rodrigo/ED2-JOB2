@@ -679,3 +679,37 @@ void removerPalavraIngles(Tree23Node** arvore, const char* palavraIngles, int un
         printf("Palavra '%s' não encontrada na unidade %d.\n", palavraIngles, unidade);
     }
 }
+
+void removerPalavraPortugues(Tree23Node **arvore, const char *palavraPortugues, int unidade) {
+    Tree23Node **remover = NULL;
+    Tree23Node *irmao = NULL;
+
+    if (*arvore) {
+        remover = buscarValorArvore(arvore, palavraPortugues, &irmao);
+
+        while (remover && *remover) {
+            if (ehFolha(*remover)) {
+                // Verifica se a palavra pertence à unidade especificada
+                if (strcmp((*remover)->info1.portugueseWord, palavraPortugues) == 0 && (*remover)->info1.unit == unidade) {
+                    // Limpa a árvore binária associada ao `info1`
+                    limparArvoreBinaria(&((*remover)->info1.englishTreeRoot));
+                    removerValorNodo(remover, palavraPortugues);
+                } else if ((*remover)->nInfos == 2 &&
+                           strcmp((*remover)->info2.portugueseWord, palavraPortugues) == 0 &&
+                           (*remover)->info2.unit == unidade) {
+                    // Limpa a árvore binária associada ao `info2`
+                    limparArvoreBinaria(&((*remover)->info2.englishTreeRoot));
+                    removerValorNodo(remover, palavraPortugues);
+                } else {
+                    printf("Palavra '%s' não encontrada na unidade %d.\n", palavraPortugues, unidade);
+                }
+                remover = NULL;
+            } else {
+                // Caso não seja folha, troca os valores para transformar o nó em folha
+                remover = trocarValoresArvore(remover, palavraPortugues, &irmao);
+            }
+        }
+    } else {
+        printf("A árvore está vazia.\n");
+    }
+}

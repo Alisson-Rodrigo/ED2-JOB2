@@ -119,3 +119,18 @@ void printTree(TreeNode* root) {
         printTree(root->right);
     }
 }
+
+
+// Função para limpar todos os nós de uma árvore binária
+void limparArvoreBinaria(TreeNode** root) {
+    if (*root != NULL) {
+        // Recursivamente limpa os nós da subárvore esquerda e direita
+        limparArvoreBinaria(&((*root)->left));
+        limparArvoreBinaria(&((*root)->right));
+
+        // Libera o nó atual
+        free(*root);
+        *root = NULL; // Garante que o ponteiro seja definido como NULL
+    }
+}
+
