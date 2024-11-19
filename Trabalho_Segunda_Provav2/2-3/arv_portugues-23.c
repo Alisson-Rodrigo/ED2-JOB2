@@ -599,3 +599,83 @@ void imprimirArvorePorUnidade(Tree23Node *arvore) {
 void adicionarTraducao(Info *info, const char *traducaoIngles, int unit) {
     info->englishTreeRoot = insertEnglishWord(info->englishTreeRoot, traducaoIngles, unit);
 }
+
+
+// informar uma unidade e então imprima todas as palavras da unidade em português seguida das equivalentes em inglês
+void imprimirPorDadaUnidadeTraducoes(Tree23Node *arvore, int unidade) {
+    printf("%% Unidade %d\n", unidade);
+    imprimirInfoUnidade(arvore, unidade);
+    printf("\n");
+}
+
+void imprimirTraducoesEmIngles(Tree23Node *arvore, const char *palavraPortugues) {
+    Tree23Node **nodo = NULL;
+    Tree23Node *irmao = NULL;
+
+    nodo = buscarValorArvore(&arvore, palavraPortugues, &irmao);
+    if (*nodo) {
+        printf("Traduções em inglês para a palavra '%s':\n", palavraPortugues);
+        if ((*nodo)->nInfos == 2) {
+            printBinaryTree((*nodo)->info1.englishTreeRoot);
+            printBinaryTree((*nodo)->info2.englishTreeRoot);
+        } else {
+            printBinaryTree((*nodo)->info1.englishTreeRoot);
+        }
+    } else {
+        printf("Palavra '%s' não encontrada.\n", palavraPortugues);
+    }
+}
+
+void removerPalavraIngles(Tree23Node** arvore, const char* palavraIngles, int unidade) {
+    Tree23Node* node = *arvore;
+    int removido = 0; // Variável para indicar se a palavra foi removida
+
+    while (node != NULL && !removido) {
+        // Verifica `info1`
+        if (node->info1.englishTreeRoot != NULL) {
+            TreeNode* resultado = searchEnglishWord(node->info1.englishTreeRoot, palavraIngles);
+            if (resultado != NULL && resultado->unit == unidade) {
+                // Remove a palavra em inglês da árvore binária
+                node->info1.englishTreeRoot = removeEnglishWord(node->info1.englishTreeRoot, palavraIngles, unidade);
+
+                // Se a árvore binária ficou vazia, remover o `info1` da árvore 2-3
+                if (node->info1.englishTreeRoot == NULL) {
+                    printf("Removendo palavra '%s' da árvore 2-3.\n", node->info1.portugueseWord);
+                    removerValorArvore(arvore, node->info1.portugueseWord);
+                }
+                removido = 1; // Marca que a palavra foi removida
+            }
+        }
+
+        // Verifica `info2`, se existir
+        if (!removido && node->nInfos == 2 && node->info2.englishTreeRoot != NULL) {
+            TreeNode* resultado = searchEnglishWord(node->info2.englishTreeRoot, palavraIngles);
+            if (resultado != NULL && resultado->unit == unidade) {
+                // Remove a palavra em inglês da árvore binária
+                node->info2.englishTreeRoot = removeEnglishWord(node->info2.englishTreeRoot, palavraIngles, unidade);
+
+                // Se a árvore binária ficou vazia, remover o `info2` da árvore 2-3
+                if (node->info2.englishTreeRoot == NULL) {
+                    printf("Removendo palavra '%s' da árvore 2-3.\n", node->info2.portugueseWord);
+                    removerValorArvore(arvore, node->info2.portugueseWord);
+                }
+                removido = 1; // Marca que a palavra foi removida
+            }
+        }
+
+        // Decidir qual subárvore percorrer
+        if (!removido) {
+            if (strcmp(palavraIngles, node->info1.portugueseWord) < 0) {
+                node = node->left;
+            } else if (node->nInfos == 1 || strcmp(palavraIngles, node->info2.portugueseWord) < 0) {
+                node = node->middle;
+            } else {
+                node = node->right;
+            }
+        }
+    }
+
+    if (!removido) {
+        printf("Palavra '%s' não encontrada na unidade %d.\n", palavraIngles, unidade);
+    }
+}

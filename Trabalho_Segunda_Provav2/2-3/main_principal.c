@@ -71,11 +71,11 @@ int main() {
                 imprimirTraducoesEmIngles(arvore, palavraPortugues);
                 break;
             case 4:
-                // (iv) Remover uma palavra em inglês de uma unidade específica
                 printf("Digite a palavra em inglês: ");
                 scanf("%s", palavraIngles);
                 printf("Digite a unidade: ");
                 scanf("%d", &unidade);
+                removerPalavraIngles(&arvore, palavraIngles, unidade);
                 break;
             case 5:
                 // (v) Remover uma palavra em português de uma unidade específica
