@@ -90,7 +90,21 @@ void inserirValorNodo(Tree23Node *nodo, Info novoInfo, Tree23Node *filho) {
     }
 }
 
-#include <string.h>
+Tree23Node** getNodoComparacao(Tree23Node *aux, Tree23Node *nodo, Tree23Node** irmao) {
+        Tree23Node **get = NULL;
+        if(nodo && aux) {
+                if(aux == nodo->left)
+                        get = &(nodo->left);
+                if(aux == nodo->middle) {
+                        get = &(nodo->middle);
+                        *irmao = nodo->left;
+                }
+                if(aux == nodo->right)
+                        get = &(nodo->right);
+        }
+        return get;
+}
+
 
 // Função para dividir a raiz inserindo um novo valor
 void dividirRaizInserindo(Tree23Node **nodo, Info novoInfo, Tree23Node *filho) {
@@ -212,7 +226,6 @@ void inserirValorArvore(Tree23Node **arvore, Info novoInfo) {
         }
     }
 }
-#include <string.h>
 
 // Função para buscar um valor na árvore 2-3
 Tree23Node** buscarValorArvore(Tree23Node **arvore, const char *valor, Tree23Node **irmao) {
@@ -437,47 +450,44 @@ Tree23Node** unirFilho(Tree23Node **remover, Tree23Node *irmao) {
     return novo;
 }
 
-#include <string.h>
-#include <stdlib.h>
 
 // Função para reconfigurar a árvore após a remoção de um valor
+// Esta funcao so e chamada se o nodo em que esta ocorrendo a remocao for folha (sem ser raiz) e nao estiver cheio
 Tree23Node** reconfigArvore(Tree23Node **remover, Tree23Node *irmao) {
-    Tree23Node **pai = NULL;
-    Tree23Node **novo = NULL;
-    Tree23Node *tio = NULL;
-
-    if (*remover) {
-        pai = &((*remover)->pai);
-
-        // Verifica se o pai não é raiz, não está cheio, e o irmão também não está cheio
-        if (!ehRaiz(*pai) && !estaCheio(*pai) && !estaCheio(irmao)) {
-            tio = (*pai)->pai->middle;
-            if (*pai == (*pai)->pai->middle)
-                tio = (*pai)->pai->left;
-
-            // Recursivamente reconfigura a árvore com o tio
-            pai = reconfigArvore(pai, tio);
+        Tree23Node **pai = NULL;
+        Tree23Node **novo = NULL;
+        Tree23Node *tio = NULL;
+        Tree23Node *aux = NULL;
+        if(*remover) {
+                pai = &((*remover)->pai);
+                if(!ehRaiz(*pai) && !estaCheio(*pai) && !estaCheio(irmao)) {
+                        tio = (*pai)->pai->middle;
+                        if(*pai == (*pai)->pai->middle)
+                                tio = (*pai)->pai->left;
+//                        printf("Nodo a remover %d: ", (*remover)->info1); endereco(*remover);
+                        aux = *remover;
+                        pai = reconfigArvore(pai, tio);
+                        remover = getNodoComparacao(aux, *pai, &irmao);
+//                        printf("Nodo a remover %d: ", (*remover)->info1); endereco(*remover);
+                }
+                novo = remover;
+                if(estaCheio(irmao)) {
+                        if(*remover == (*pai)->left)
+                                rotacionarEsq(*remover, irmao);
+                        else {
+//                                printf("Nodo a remover %d: ", (*remover)->meio->info1); endereco((*remover)->meio);
+//                                printf("Nodo irmao %d: ", irmao->info1); endereco(irmao);
+                                rotacionarDir(*remover, irmao);
+//                                printf("Nodo a remover %d: ", (*remover)->meio->info1); endereco((*remover)->meio);
+//                                printf("Nodo irmao %d: ", irmao->info1); endereco(irmao);
+                        }
+                } else if(estaCheio(*pai))
+//                        printf("Unir os nodo de remocao com seu irmao (%d e %d)\n", (*remover)->info1, irmao->info1);
+                        novo = unirFilho(remover, irmao);
+                else
+                        novo = unirPai(remover, irmao);
         }
-
-        novo = remover;
-
-        // Se o irmão está cheio, faz uma rotação
-        if (estaCheio(irmao)) {
-            if (*remover == (*pai)->left)
-                rotacionarEsq(*remover, irmao);
-            else
-                rotacionarDir(*remover, irmao);
-        }
-        // Se o pai está cheio, faz a união com o irmão
-        else if (estaCheio(*pai)) {
-            novo = unirFilho(remover, irmao);
-        }
-        // Caso contrário, faz a união com o pai
-        else {
-            novo = unirPai(remover, irmao);
-        }
-    }
-    return novo;
+        return novo;
 }
 
 // Função para remover um valor da árvore 2-3
