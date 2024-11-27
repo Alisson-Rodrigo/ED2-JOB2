@@ -172,7 +172,7 @@ Arv_portugues *procuraMenor_arv(Arv_portugues *atual)
     return no1;
 }
 
-Arv_portugues *remove_NO_arv(Arv_portugues *H, char *palavra)
+Arv_portugues *remove_NO_arv(Arv_portugues *H, Arv_portugues *no)
 {
     Arv_portugues *resultado = H; // Variavel auxiliar para armazenar o resultado final
 
@@ -182,20 +182,20 @@ Arv_portugues *remove_NO_arv(Arv_portugues *H, char *palavra)
     }
     else
     {
-        if (valor < H->dados.codigo)
+        if (strcmp(no->dados.portugueseWord, H->dados.portugueseWord) < 0)
         {
             if (H->esq != NULL && H->esq->cor == BLACK && (H->esq->esq == NULL || H->esq->esq->cor == BLACK))
                 H = move2EsqRED_arv(H);
 
             if (H->esq != NULL)
-                H->esq = remove_NO_arv(H->esq, valor);
+                H->esq = remove_NO_arv(H->esq, no->dados.portugueseWord);
         }
         else
         {
             if (H->esq != NULL && H->esq->cor == RED)
                 H = rotacionarDireita_arv(H);
 
-            if (valor == H->dados.codigo && (H->dir == NULL))
+            if (no->dados.portugueseWord == H->dados.portugueseWord && (H->dir == NULL))
             {
                 free(H);
                 resultado = NULL;
@@ -205,15 +205,15 @@ Arv_portugues *remove_NO_arv(Arv_portugues *H, char *palavra)
                 if (H->dir != NULL && H->dir->cor == BLACK && (H->dir->esq == NULL || H->dir->esq->cor == BLACK))
                     H = move2DirRED_arv(H);
 
-                if (valor == H->dados.codigo)
+                if (no->dados.portugueseWord == H->dados.portugueseWord)
                 {
                     Arv_portugues *x = procuraMenor_arv(H->dir);
-                    H->dados.codigo = x->dados.codigo;
+                    H->dados.portugueseWord = x->dados.portugueseWord;
                     H->dir = removerMenor_arv(H->dir);
                 }
                 else if (H->dir != NULL)
                 {
-                    H->dir = remove_NO_arv(H->dir, valor);
+                    H->dir = remove_NO_arv(H->dir, no->dados.portugueseWord);
                 }
             }
         }
