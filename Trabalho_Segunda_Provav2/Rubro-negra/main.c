@@ -44,7 +44,7 @@ void carregarArquivo(const char *nomeArquivo, Arv_portugues *arvore)
                 strcpy(novo_no->dados.portugueseWord, traducaoPortugues);
                 novo_no->dados.englishTreeRoot = palavraIngles;
 
-                arvore = inserir_no(arvore, novo_no);
+                arvore = inserir_rec_arv(arvore, novo_no);
 
                 // Info novoInfo = criaInfo(traducaoPortugues, palavraIngles, unidadeAtual);
                 // inserirArvRB(arvore, &novoInfo);
