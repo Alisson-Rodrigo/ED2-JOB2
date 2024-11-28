@@ -612,9 +612,50 @@ void adicionarTraducao(Info *info, const char *traducaoIngles, int unit) {
 // informar uma unidade e então imprima todas as palavras da unidade em português seguida das equivalentes em inglês
 void imprimirPorDadaUnidadeTraducoes(Tree23Node *arvore, int unidade) {
     printf("%% Unidade %d\n", unidade);
-    imprimirInfoUnidade(arvore, unidade);
+
+    // Função auxiliar para percorrer a árvore e imprimir os dados formatados
+    imprimirInfoUnidadeFormatadaLinhaPorLinha(arvore, unidade);
+
     printf("\n");
 }
+
+// Função auxiliar para imprimir informações formatadas (linha por linha)
+void imprimirInfoUnidadeFormatadaLinhaPorLinha(Tree23Node *arvore, int unidade) {
+    if (arvore != NULL) {
+        // Percorre a subárvore à esquerda
+        imprimirInfoUnidadeFormatadaLinhaPorLinha(arvore->left, unidade);
+
+        // Imprime as informações do nó, se a unidade corresponder
+        if (arvore->info1.unit == unidade) {
+            printf("- Palavra: %s\n", arvore->info1.portugueseWord);
+            printf("  Traduções:\n");
+            imprimirTraducoesLinhaPorLinha(arvore->info1.englishTreeRoot);
+        }
+        if (arvore->nInfos == 2 && arvore->info2.unit == unidade) {
+            printf("- Palavra: %s\n", arvore->info2.portugueseWord);
+            printf("  Traduções:\n");
+            imprimirTraducoesLinhaPorLinha(arvore->info2.englishTreeRoot);
+        }
+
+        // Percorre a subárvore do meio
+        imprimirInfoUnidadeFormatadaLinhaPorLinha(arvore->middle, unidade);
+
+        // Percorre a subárvore à direita, se o nó contiver duas informações
+        if (arvore->nInfos == 2) {
+            imprimirInfoUnidadeFormatadaLinhaPorLinha(arvore->right, unidade);
+        }
+    }
+}
+
+// Função para imprimir traduções da árvore binária (linha por linha)
+void imprimirTraducoesLinhaPorLinha(TreeNode *raiz) {
+    if (raiz != NULL) {
+        imprimirTraducoesLinhaPorLinha(raiz->left);  // Subárvore esquerda
+        printf("    - %s\n", raiz->englishWord);     // Palavra em inglês
+        imprimirTraducoesLinhaPorLinha(raiz->right); // Subárvore direita
+    }
+}
+
 
 void imprimirTraducoesEmIngles(Tree23Node *arvore, const char *palavraPortugues) {
     Tree23Node **nodo = NULL;

@@ -1,52 +1,71 @@
-#ifndef DISCIPLINA_H
-#define DISCIPLINA_H
+#ifndef ARV_PORTUGUES_H
+#define ARV_PORTUGUES_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "arv-ingles-bin.h" // Inclui a árvore binária para as traduções em inglês
 
 #define BLACK 0
 #define RED 1
-#include "arv-ingles-bin.c"
 
-typedef struct info
-{
-    char portugueseWord[50];      // Palavra em português
-    TreeNode *englishTreeRoot;    // Raiz da árvore binária para traduções em inglês
-    int unit;                     // Unidade correspondente
+// Estrutura Info para armazenar informações de palavras em português
+typedef struct Info {
+    char portugueseWord[50]; // Palavra em português
+    int unit;                // Unidade
+    TreeNodeEn* englishTreeRoot; // Raiz da árvore binária de traduções em inglês
 } Info;
 
-typedef struct arv_portugues
-{
-    Info dados;
-    struct arv_portugues *esq;
-    struct arv_portugues *dir;
-    int cor;
+// Estrutura para o nó da árvore vermelho-preta
+typedef struct Arv_portugues {
+    Info dados;                  // Dados armazenados no nó
+    int cor;                     // Cor do nó: RED ou BLACK
+    struct Arv_portugues* esq;   // Subárvore esquerda
+    struct Arv_portugues* dir;   // Subárvore direita
 } Arv_portugues;
 
-// Funções de criação e inserção
-void ler_dados(arv_disciplina *no, arv_curso *curso);
-arv_disciplina *cria_no();
-arv_disciplina *inserir_disciplina(arv_disciplina *raiz, arv_disciplina *no);
-arv_disciplina *inserir_rec(arv_disciplina *raiz, arv_disciplina *no);
+// Funções para manipulação da árvore vermelho-preta
 
-// Funções de balanceamento e rotação
-void trocaCor(arv_disciplina *H);
-arv_disciplina *rotacionarEsquerda(arv_disciplina *A);
-arv_disciplina *rotacionarDireita(arv_disciplina *A);
-arv_disciplina *balancear(arv_disciplina *raiz);
+// Cria um novo nó na árvore
+Arv_portugues* cria_no_arv();
 
+// Troca a cor de um nó e de seus filhos
+void trocaCor_arv(Arv_portugues* H);
 
-    // Funções de remoção
-    arv_disciplina *removerMenor(arv_disciplina * H);
-    arv_disciplina *procuraMenor(arv_disciplina * atual);
-    arv_disciplina *remove_NO(arv_disciplina * H, int valor);
-    int remove_ArvLLRB(arv_disciplina * *raiz, int codigo);
+// Rotaciona a subárvore à esquerda
+Arv_portugues* rotacionarEsquerda_arv(Arv_portugues* A);
 
-    // Função de busca
-    arv_disciplina *buscar_disciplina(arv_disciplina * raiz, int codigo);
+// Rotaciona a subárvore à direita
+Arv_portugues* rotacionarDireita_arv(Arv_portugues* A);
 
-    // Função de impressão
-    void imprimir_disciplinas(arv_disciplina * raiz);
+// Insere um novo nó na árvore
+Arv_portugues* inserir_no(Arv_portugues* raiz, Arv_portugues* no);
 
-    // Funções auxiliares
-    arv_disciplina *move2EsqRED(arv_disciplina * H);
-    arv_disciplina *move2DirRED(arv_disciplina * H);
+// Função auxiliar para inserção recursiva
+Arv_portugues* inserir_rec_arv(Arv_portugues* raiz, Arv_portugues* no);
 
-#endif // DISCIPLINA_H
+// Balanceia a árvore após inserção ou remoção
+Arv_portugues* balancear_arv(Arv_portugues* raiz);
+
+// Busca uma palavra em português na árvore
+Arv_portugues* buscar_palavra_portugues(Arv_portugues* raiz, char* portugues, int unidade);
+
+// Remove uma palavra da árvore vermelho-preta
+int remove_ArvLLRB_arv(Arv_portugues** raiz, char* palavra, int unidade);
+
+// Move a subárvore esquerda se for RED
+Arv_portugues* move2EsqRED_arv(Arv_portugues* H);
+
+// Move a subárvore direita se for RED
+Arv_portugues* move2DirRED_arv(Arv_portugues* H);
+
+// Remove o menor nó da subárvore
+Arv_portugues* removerMenor_arv(Arv_portugues* H);
+
+// Procura o menor nó na subárvore
+Arv_portugues* procuraMenor_arv(Arv_portugues* atual);
+
+// Remove um nó específico da árvore
+Arv_portugues* remove_NO_arv(Arv_portugues* H, Arv_portugues* no);
+
+#endif // ARV_PORTUGUES_H

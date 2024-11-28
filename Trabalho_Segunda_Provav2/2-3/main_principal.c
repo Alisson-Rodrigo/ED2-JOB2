@@ -9,7 +9,6 @@ void carregarArquivo(const char *nomeArquivo, Tree23Node **arvore) {
     FILE *arquivo = fopen(nomeArquivo, "r");
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo.\n");
-        return;
     }
 
     char linha[256];
@@ -137,7 +136,7 @@ int main() {
     char palavraIngles[50];
 
     // Carregar o arquivo de palavras
-    carregarArquivo("C:/Users/purolight/Documents/GitHub/ED2-JOB2/Trabalho_Segunda_Provav2/2-3/vocabulario.txt", &arvore);
+    carregarArquivo("C:/Users/jorge/OneDrive/Documentos/GitHub/ED2-JOB2/Trabalho_Segunda_Provav2/2-3/vocabulario.txt", &arvore);
 
     // Loop principal do menu
     while (opcao != 6) {

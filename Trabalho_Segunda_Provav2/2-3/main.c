@@ -122,7 +122,7 @@ int main() {
     int unidade;
 
     // Carregar o arquivo de palavras
-    carregarArquivo("C:/Users/purolight/Documents/GitHub/ED2-JOB2/Trabalho_Segunda_Provav2/2-3/vocabulario.txt", &arvore23);
+    carregarArquivo("C:/Users/jorge/OneDrive/Documentos/GitHub/ED2-JOB2/Trabalho_Segunda_Provav2/2-3/vocabulario.txt", &arvore23);
 
     // Exibir os valores da árvore 2-3
     printf("Árvore 2-3 carregada:\n");
