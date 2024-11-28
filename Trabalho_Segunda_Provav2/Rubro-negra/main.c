@@ -11,7 +11,7 @@ Arv_portugues* carregarArquivo(const char *nomeArquivo, Arv_portugues *arvore)
     if (arquivo == NULL)
     {
         printf("Erro ao abrir o arquivo.\n");
-        return;
+        arvore = NULL;
     }
 
     char linha[256];
