@@ -17,6 +17,27 @@ Arv_portugues *cria_no_arv()
     return no;
 }
 
+Info *cria_info(char *portugueseWord, char *englishWord, int unit) {
+    Info *info = (Info *)malloc(sizeof(Info));
+    if (info != NULL) {
+        // Copia a palavra em português e a unidade
+        strcpy(info->portugueseWord, portugueseWord);
+        info->unit = unit;
+        
+        // Aloca memória para a árvore binária de palavras em inglês
+        info->englishTreeRoot = (TreeNode *)malloc(sizeof(TreeNode));
+        if (info->englishTreeRoot != NULL) {
+            // Inicializa o nó da árvore binária com a palavra em inglês
+            strcpy(info->englishTreeRoot->englishWord, englishWord);
+            info->englishTreeRoot->unit = unit;
+            info->englishTreeRoot->left = NULL;
+            info->englishTreeRoot->right = NULL;
+        }
+    }
+    return info;
+}
+
+
 void trocaCor_arv(Arv_portugues *H)
 {
     if (H != NULL)
