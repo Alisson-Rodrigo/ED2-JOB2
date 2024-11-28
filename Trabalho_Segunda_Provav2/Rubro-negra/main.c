@@ -31,7 +31,7 @@ void carregarArquivo(const char *nomeArquivo, Arv_portugues *arvore)
         {
             char palavraIngles[50], traducoesPortugues[200];
             sscanf(linha, "%[^:]: %[^;]", palavraIngles, traducoesPortugues);
-            printf("Lendo: Palavra Inglês = '%s', Traduções: '%s'\n", palavraIngles, traducoesPortugues);
+           
             
             char *traducaoPortugues = strtok(traducoesPortugues, ",;");
             while(traducaoPortugues != NULL)
@@ -42,9 +42,10 @@ void carregarArquivo(const char *nomeArquivo, Arv_portugues *arvore)
                 Arv_portugues *novo_no = cria_no_arv();
                 novo_no->dados.unit = unidadeAtual;
                 strcpy(novo_no->dados.portugueseWord, traducaoPortugues);
-                novo_no->dados.englishTreeRoot = palavraIngles;
+                novo_no->dados.englishTreeRoot = NULL;
+                arvore = inserir_no(arvore, novo_no);  // Correção
+                
 
-                arvore = inserir_rec_arv(arvore, novo_no);
 
                 // Info novoInfo = criaInfo(traducaoPortugues, palavraIngles, unidadeAtual);
                 // inserirArvRB(arvore, &novoInfo);
@@ -68,7 +69,7 @@ void exibirPalavrasPorUnidade(Arv_portugues *arvore, int unidade) {
         if (arvore->dados.unit == unidade) {
             printf("%s: ", arvore->dados.portugueseWord);
             int primeira = 1;
-            imprimirTraducoesEn(arvore->dados.englishTreeRoot, arvore->dados.portugueseWord, &primeira);
+            imprimirTraducoes(arvore->dados.englishTreeRoot, arvore->dados.portugueseWord, &primeira);
             printf("\n");
         }
 
@@ -123,7 +124,7 @@ int main() {
     char palavraIngles[50];
 
     // Carregar o arquivo de palavras
-    carregarArquivo("C:/Users/purolight/Documents/GitHub/ED2-JOB2/Trabalho_Segunda_Provav2/Rubro-negra/vocabulario1.txt", &arvore);
+    carregarArquivo("C:/Users/purolight/Documents/GitHub/ED2-JOB2/Trabalho_Segunda_Provav2/Rubro-negra/vocabulario1.txt", arvore);
 
     // Loop principal do menu
     while (opcao != 6) {
@@ -147,7 +148,7 @@ int main() {
                 if (resultado != NULL) {
                     printf("Traduções para '%s':\n", palavraPortugues);
                     int primeira = 1;
-                    imprimirTraducoesEn(resultado->dados.englishTreeRoot, palavraPortugues, &primeira);
+                    imprimirTraducoes(resultado->dados.englishTreeRoot, palavraPortugues, &primeira);
                     printf("\n");
                 } else {
                     printf("Palavra não encontrada.\n");
@@ -161,7 +162,7 @@ int main() {
 
                 Arv_portugues *no = buscar_palavra_portugues(arvore, palavraIngles, unidade);
                 if (no) {
-                    no->dados.englishTreeRoot = removeEnglishWordEn(no->dados.englishTreeRoot, palavraIngles, unidade);
+                    no->dados.englishTreeRoot = removeEnglishWord(no->dados.englishTreeRoot, palavraIngles, unidade);
                     printf("Palavra '%s' removida com sucesso.\n", palavraIngles);
                 } else {
                     printf("Erro ao remover a palavra '%s'.\n", palavraIngles);
@@ -181,7 +182,7 @@ int main() {
                 break;
             case 6:
                 printf("Saindo...\n");
-                limparArvoreBinariaEn(&(arvore->dados.englishTreeRoot));
+                limparArvoreBinaria(&(arvore->dados.englishTreeRoot));
                // limparArvore(&arvore);
                 break;
             default:
@@ -193,25 +194,3 @@ int main() {
     return 0;
 }
 
-
-// int main() {
-//     Arv_portugues *arvore = NULL;
-//     Arv_portugues *novoNo = cria_no_arv();
-//     if (novoNo == NULL) {
-//         printf("Erro ao criar nó.\n");
-//         return 1;
-//     }
-
-//     strcpy(novoNo->dados.portugueseWord, "teste");
-//     novoNo->dados.unit = 1;
-
-//     arvore = inserir_no(arvore, novoNo);
-
-//     if (arvore) {
-//         printf("Palavra inserida: %s, Unidade: %d\n", arvore->dados.portugueseWord, arvore->dados.unit);
-//     } else {
-//         printf("Erro ao inserir nó.\n");
-//     }
-
-//     return 0;
-// }

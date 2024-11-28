@@ -1,5 +1,6 @@
 #include "arv-ingles-bin.h"
 
+
 // Função para criar um novo nó na árvore binária de busca
 TreeNode* createNode(const char* word, int unit) {
     TreeNode* newNode = (TreeNode*)malloc(sizeof(TreeNode));

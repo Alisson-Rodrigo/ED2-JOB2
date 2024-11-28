@@ -1,5 +1,5 @@
-#ifndef ARV_INGLES_BINARIA_H
-#define ARV_INGLES_BINARIA_H
+#ifndef ARV_INGLES_BIN_H
+#define ARV_INGLES_BIN_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
