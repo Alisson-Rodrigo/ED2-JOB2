@@ -5,7 +5,7 @@
 #include "arv-ingles-bin.c"
 
 // Função para carregar o arquivo com as palavras e traduções
-void carregarArquivo(const char *nomeArquivo, Arv_portugues **arvore)
+void carregarArquivo(const char *nomeArquivo, Arv_portugues *arvore)
 {
     FILE *arquivo = fopen(nomeArquivo, "r");
     if (arquivo == NULL)
@@ -42,9 +42,9 @@ void carregarArquivo(const char *nomeArquivo, Arv_portugues **arvore)
                 Arv_portugues *novo_no = cria_no_arv();
                 novo_no->dados.unit = unidadeAtual;
                 strcpy(novo_no->dados.portugueseWord, traducaoPortugues);
-                novo_no->dados.englishTreeRoot = NULL;
+                novo_no->dados.englishTreeRoot = palavraIngles;
 
-                inserir_no(arvore, novo_no);
+                arvore = inserir_no(arvore, novo_no);
 
                 // Info novoInfo = criaInfo(traducaoPortugues, palavraIngles, unidadeAtual);
                 // inserirArvRB(arvore, &novoInfo);
@@ -194,24 +194,24 @@ int main() {
 }
 
 
-int main() {
-    Arv_portugues *arvore = NULL;
-    Arv_portugues *novoNo = cria_no_arv();
-    if (novoNo == NULL) {
-        printf("Erro ao criar nó.\n");
-        return 1;
-    }
+// int main() {
+//     Arv_portugues *arvore = NULL;
+//     Arv_portugues *novoNo = cria_no_arv();
+//     if (novoNo == NULL) {
+//         printf("Erro ao criar nó.\n");
+//         return 1;
+//     }
 
-    strcpy(novoNo->dados.portugueseWord, "teste");
-    novoNo->dados.unit = 1;
+//     strcpy(novoNo->dados.portugueseWord, "teste");
+//     novoNo->dados.unit = 1;
 
-    arvore = inserir_no(arvore, novoNo);
+//     arvore = inserir_no(arvore, novoNo);
 
-    if (arvore) {
-        printf("Palavra inserida: %s, Unidade: %d\n", arvore->dados.portugueseWord, arvore->dados.unit);
-    } else {
-        printf("Erro ao inserir nó.\n");
-    }
+//     if (arvore) {
+//         printf("Palavra inserida: %s, Unidade: %d\n", arvore->dados.portugueseWord, arvore->dados.unit);
+//     } else {
+//         printf("Erro ao inserir nó.\n");
+//     }
 
-    return 0;
-}
+//     return 0;
+// }
