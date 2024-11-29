@@ -306,17 +306,17 @@ void imprimirInfoUnidade(Portugues23 *arvore, int unidade)
     }
 }
 
-void imprimirTraducoes(Inglesbin *node, int unidade, const char *palavraPortuguês)
+void imprimirTraducoes(Inglesbin *node, int unidade, const char *palavraPortugues)
 {
     if (node)
     {
         if (node->unidade == unidade)
         {
-            printf("Palavra em Português: %s\n", palavraPortuguês);
+            printf("Palavra em Português: %s\n", palavraPortugues);
             printf("Palavra em inglês: %s\n", node->palavraIngles);
         }
-        imprimirTraducoes(node->esq, unidade, palavraPortuguês);
-        imprimirTraducoes(node->dir, unidade, palavraPortuguês);
+        imprimirTraducoes(node->esq, unidade, palavraPortugues);
+        imprimirTraducoes(node->dir, unidade, palavraPortugues);
     }
 }
 

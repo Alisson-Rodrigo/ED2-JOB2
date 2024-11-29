@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "arv23.h"
+#include "arv23.c"
 // #include "arvbin.h"
 
 int inserirPalavraPortugues(Portugues23 **arvore, char *palavraPortugues, char *palavraIngles, int unidade) {
@@ -75,7 +75,7 @@ void carregarArquivo(const char *nomeArquivo, Portugues23 **arvore)
 int main()
 {
     Portugues23 *raiz = NULL;
-    carregarArquivo("/mnt/c/Users/Rayssa Alves/Documents/trabalho_ed2/Tabalho2_Ed2/trabalhoEd2.txt", &raiz);
+    carregarArquivo("C:/Users/PurooLight/Documents/GitHub/ED2-JOB2/Trabalho_segunda_provaVERSAO-REFERENCIA/Tabalho2_Ed2-main/trabalhoEd2.txt", &raiz);
     
     printf("\n--------------------------------------------------------------- \n");
     printf("Árvore 2-3 carregada:\n");
