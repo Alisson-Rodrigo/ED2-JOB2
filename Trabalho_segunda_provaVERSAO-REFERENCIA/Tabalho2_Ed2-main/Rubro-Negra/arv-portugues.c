@@ -1,22 +1,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "arv-portugues.h"
+#include "arv-ingles-bin.h"
 
 #define BLACK 0
 #define RED 1
 
-Arv_portugues *cria_no_arv()
+Info* cria_info (char *palavraPortugues, char *palavraIngles, int unidade)
 {
-    Arv_portugues *no = (Arv_portugues *)malloc(sizeof(Arv_portugues));
-    if (no != NULL)
-    {
-        no->cor = RED;
-        no->esq = NULL;
-        no->dir = NULL;
-        no->dados.englishTreeRoot = NULL;
-    }
-    return no;
+    Info *info;
+    strcpy(info->portugueseWord, palavraPortugues);
+    info->unit = unidade;
+    info->englishTreeRoot = NULL;
+    info->englishTreeRoot = insertEnglishWord(info->englishTreeRoot, palavraIngles, unidade);
+    return info;
 }
+
+Arv_portugues *cria_no_arv(Info *info)
+{
+    Arv_portugues *novoNo = (Arv_portugues *)malloc(sizeof(Arv_portugues));
+    if (novoNo != NULL)
+    {
+        novoNo->dados = *info;
+        novoNo->cor = RED;
+        novoNo->esq = NULL;
+        novoNo->dir = NULL;
+    }
+    return novoNo;
+}
+
 
 void trocaCor_arv(Arv_portugues *H)
 {
@@ -89,32 +101,37 @@ Arv_portugues *balancear_arv(Arv_portugues *raiz)
     return raiz;
 }
 
+void adicionarTraducaoEmIngles(Arv_portugues *raiz, char *palavraIng, int unidade)
+{
+    raiz->dados.englishTreeRoot = insertEnglishWord(raiz->dados.englishTreeRoot, palavraIng, unidade);
+}
 
-Arv_portugues *buscar_palavra_portugues(Arv_portugues *raiz, char *portugues, int unidade) {
+
+Arv_portugues *buscar_palavra_portugues(Arv_portugues *raiz, char *portugues) {
     Arv_portugues *resultado = NULL;
     if (raiz != NULL) {
-        if (strcmp(portugues, raiz->dados.portugueseWord) == 0 && raiz->dados.unit == unidade) {
+        if (strcmp(portugues, raiz->dados.portugueseWord) == 0) {
             resultado = raiz;
         } else if (strcmp(portugues, raiz->dados.portugueseWord) < 0) {
-            resultado = buscar_palavra_portugues(raiz->esq, portugues, unidade);
+            resultado = buscar_palavra_portugues(raiz->esq, portugues);
         } else {
-            resultado = buscar_palavra_portugues(raiz->dir, portugues, unidade);
+            resultado = buscar_palavra_portugues(raiz->dir, portugues);
         }
     }
     return resultado;
 }
 
-int remove_ArvLLRB_arv(Arv_portugues **raiz, char *palavra, int unidade) {
-    int aux = 0;
+Arv_portugues* remove_ArvLLRB_arv(Arv_portugues *raiz, char *palavra) {
+    int aux = raiz;
 
     // Buscar o nó correspondente
-    Arv_portugues *no = buscar_palavra_portugues(*raiz, palavra, unidade);
+    Arv_portugues *no = buscar_palavra_portugues(raiz, palavra);
     if (no != NULL) {
-        *raiz = remove_NO_arv(*raiz, no); // Passar o nó encontrado
-        if (*raiz != NULL) {
-            (*raiz)->cor = BLACK;
+        aux = remove_NO_arv(raiz, no); // Passar o nó encontrado
+        if (raiz != NULL) {
+            (raiz)->cor = BLACK;
         }
-        aux = 1; // Indicar sucesso
+        aux = raiz; // Indicar sucesso
     }
 
     return aux; // Indicar se foi removido ou não

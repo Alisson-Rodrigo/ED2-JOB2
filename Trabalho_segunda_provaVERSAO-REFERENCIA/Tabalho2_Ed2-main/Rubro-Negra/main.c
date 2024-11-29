@@ -1,17 +1,35 @@
 #include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "arv-portugues.c"
 #include "arv-ingles-bin.c"
+// #include "arvbin.h"
 
-// Função para carregar o arquivo com as palavras e traduções
+Arv_portugues* inserirPalavraPortugues(Arv_portugues *arvore, char *palavraPortugues, char *palavraIngles, int unidade) {
+
+    // Busca a palavra na árvore
+    Arv_portugues *noExistente = NULL;
+    noExistente =  buscar_palavra_portugues(arvore, palavraPortugues);
+
+    if (noExistente != NULL) {
+        printf("A palavra já existe. Adicionando tradução...\n");
+        adicionarTraducaoEmIngles(noExistente, palavraIngles, unidade);
+    } else {
+        Info *novoInfo = cria_info(palavraPortugues, palavraIngles, unidade);
+        arvore = inserir_no(arvore, novoInfo);
+        
+    }
+    return arvore;
+}
+
 Arv_portugues* carregarArquivo(const char *nomeArquivo, Arv_portugues *arvore)
 {
     FILE *arquivo = fopen(nomeArquivo, "r");
     if (arquivo == NULL)
     {
         printf("Erro ao abrir o arquivo.\n");
-        arvore = NULL;
+        return arvore;
     }
 
     char linha[256];
@@ -31,7 +49,7 @@ Arv_portugues* carregarArquivo(const char *nomeArquivo, Arv_portugues *arvore)
         {
             char palavraIngles[50], traducoesPortugues[200];
             sscanf(linha, "%[^:]: %[^;]", palavraIngles, traducoesPortugues);
-           
+            printf("Lendo: Palavra Inglês = '%s', Traduções: '%s'\n", palavraIngles, traducoesPortugues);
             
             char *traducaoPortugues = strtok(traducoesPortugues, ",;");
             while(traducaoPortugues != NULL)
@@ -39,13 +57,7 @@ Arv_portugues* carregarArquivo(const char *nomeArquivo, Arv_portugues *arvore)
                 while (*traducaoPortugues == ' ') 
                     traducaoPortugues++;
 
-                Arv_portugues *novo_no = cria_no_arv();
-                novo_no->dados.unit = unidadeAtual;
-                strcpy(novo_no->dados.portugueseWord, traducaoPortugues);
-                novo_no->dados.englishTreeRoot = NULL;
-                arvore = inserir_no(arvore, novo_no);  // Correção
-                
-
+                inserirPalavraPortugues(arvore, traducaoPortugues, palavraIngles, unidadeAtual);
 
                 // Info novoInfo = criaInfo(traducaoPortugues, palavraIngles, unidadeAtual);
                 // inserirArvRB(arvore, &novoInfo);
@@ -61,137 +73,68 @@ Arv_portugues* carregarArquivo(const char *nomeArquivo, Arv_portugues *arvore)
 }
 
 
+int main()
+{
 
-// Função auxiliar para exibir palavras de uma unidade específica
-void exibirPalavrasPorUnidade(Arv_portugues *arvore, int unidade) {
-    if (arvore != NULL) {
-        exibirPalavrasPorUnidade(arvore->esq, unidade);
+    Arv_portugues *raiz = NULL;
 
-        if (arvore->dados.unit == unidade) {
-            printf("%s: ", arvore->dados.portugueseWord);
-            int primeira = 1;
-            imprimirTraducoes(arvore->dados.englishTreeRoot, arvore->dados.portugueseWord, &primeira);
-            printf("\n");
-        }
+    raiz = carregarArquivo("C:/Users/PurooLight/Documents/GitHub/ED2-JOB2/Trabalho_segunda_provaVERSAO-REFERENCIA/Tabalho2_Ed2-main/trabalhoEd2.txt", &raiz);
 
-        exibirPalavrasPorUnidade(arvore->dir, unidade);
-    }
-}
+    // Info info1 = criaInfo("casa", 1);
+    // Info info2 = criaInfo("livro", 2);
+    // Info info3 = criaInfo("carro", 3);
+    // Info info4 = criaInfo("arroz", 4);
 
-// Função para verificar se há palavras para a unidade atual
-void verificarUnidade(Arv_portugues *arvore, int unidade, int *temPalavras) {
-    if (arvore != NULL) {
-        if (arvore->dados.unit == unidade) {
-            *temPalavras = 1;
-        }
-        verificarUnidade(arvore->esq, unidade, temPalavras);
-        verificarUnidade(arvore->dir, unidade, temPalavras);
-    }
-}
+    // inserirArvRB(&raiz, &info1);
+    // inserirArvRB(&raiz, &info2);
+    // inserirArvRB(&raiz, &info3);
+    // inserirArvRB(&raiz, &info4);
 
-// Função principal para exibir a árvore no formato do arquivo
-void exibirArvoreFormatoArquivo(Arv_portugues *arvore) {
-    int unidade = 1;
-    while (1) {
-        int temPalavras = 0;
-        verificarUnidade(arvore, unidade, &temPalavras);
+    exibirArvore(raiz);
+    printf("\n--------------------------------------------------------------- \n");
 
-        if (!temPalavras) break;
+    removerNoArvVP(&raiz, "bicicleta");
+    printf("\n--------------------------------------------------------------- \n");
 
-        printf("%% Unidade %d\n", unidade);
-        exibirPalavrasPorUnidade(arvore, unidade);
-        unidade++;
-    }
-}
+    exibirArvore(raiz);
 
-// Função para exibir o menu de opções
-void exibirMenu() {
-    printf("\nEscolha uma opção:\n");
-    printf("1 - Imprimir traduções por unidade\n");
-    printf("2 - Imprimir uma unidade específica e suas traduções\n");
-    printf("3 - Imprimir traduções em inglês de uma palavra em português\n");
-    printf("4 - Remover uma palavra em inglês de uma unidade\n");
-    printf("5 - Remover uma palavra em português de uma unidade\n");
-    printf("6 - Sair\n");
-    printf("Digite sua opção: ");
-}
+    printf("\n--------------------------------------------------------------- \n");
 
-int main() {
-    Arv_portugues *arvore = NULL;
+    BuscarPalavraIngles(&raiz, "Bus", 1);
 
-    int opcao = -1;
-    int unidade;
-    char palavraPortugues[50];
-    char palavraIngles[50];
+    exibirArvore(raiz);
 
-    // Carregar o arquivo de palavras
-    arvore = carregarArquivo("C:/Users/purolight/Documents/GitHub/ED2-JOB2/Trabalho_Segunda_Provav2/Rubro-negra/vocabulario1.txt", arvore);
+    // PortuguesRB *raiz = NULL;
+    
+    
+    // printf("\n--------------------------------------------------------------- \n");
+    // printf("Árvore 2-3 carregada:\n");
+    // exibir_tree23(raiz);
 
-    // Loop principal do menu
-    while (opcao != 6) {
-        exibirMenu();
-        scanf("%d", &opcao);
+    // printf("\n--------------------------------------------------------------- \n");
+    // printf("\nPalavras da unidade 1: \n");
+    // imprimirInfoUnidade(raiz, 1);
 
-        switch (opcao) {
-            case 1:
-                exibirArvoreFormatoArquivo(arvore);
-                break;
-            case 2:
-                printf("Digite a unidade: ");
-                scanf("%d", &unidade);
-                printf("%% Unidade %d\n", unidade);
-                exibirPalavrasPorUnidade(arvore, unidade);
-                break;
-            case 3:
-                printf("Digite a palavra em português: ");
-                scanf("%s", palavraPortugues);
-                Arv_portugues *resultado = buscar_palavra_portugues(arvore, palavraPortugues, unidade);
-                if (resultado != NULL) {
-                    printf("Traduções para '%s':\n", palavraPortugues);
-                    int primeira = 1;
-                    imprimirTraducoes(resultado->dados.englishTreeRoot, palavraPortugues, &primeira);
-                    printf("\n");
-                } else {
-                    printf("Palavra não encontrada.\n");
-                }
-                break;
-            case 4:
-                printf("Digite a palavra em inglês: ");
-                scanf("%s", palavraIngles);
-                printf("Digite a unidade: ");
-                scanf("%d", &unidade);
+    // printf("\n--------------------------------------------------------------- \n");
 
-                Arv_portugues *no = buscar_palavra_portugues(arvore, palavraIngles, unidade);
-                if (no) {
-                    no->dados.englishTreeRoot = removeEnglishWord(no->dados.englishTreeRoot, palavraIngles, unidade);
-                    printf("Palavra '%s' removida com sucesso.\n", palavraIngles);
-                } else {
-                    printf("Erro ao remover a palavra '%s'.\n", palavraIngles);
-                }
-                break;
-            case 5:
-                printf("Digite a palavra em português para remover: ");
-                scanf("%s", palavraPortugues);
-                printf("Digite a unidade: ");
-                scanf("%d", &unidade);
 
-                if (remove_ArvLLRB_arv(&arvore, palavraPortugues, unidade)) {
-                    printf("Palavra '%s' removida com sucesso.\n", palavraPortugues);
-                } else {
-                    printf("Erro ao remover a palavra '%s'.\n", palavraPortugues);
-                }
-                break;
-            case 6:
-                printf("Saindo...\n");
-                limparArvoreBinaria(&(arvore->dados.englishTreeRoot));
-               // limparArvore(&arvore);
-                break;
-            default:
-                printf("Opção inválida! Tente novamente.\n");
-                break;
-        }
-    }
+    // exibir_traducao_Portugues(&raiz, "bicicleta");
+
+    // printf("\n--------------------------------------------------------------- \n");
+
+    // BuscarPalavraIngles(&raiz, "Coller", 1);
+   
+    // printf("\n--------------------------------------------------------------- \n");
+
+    // removerElemento(&raiz, "bicicleta");
+
+    // printf("\nPalavras apos remoção: \n\n");
+
+    // exibir_tree23(raiz);
+
+
+
+    // // freeTree(raiz);
 
     return 0;
 }
-

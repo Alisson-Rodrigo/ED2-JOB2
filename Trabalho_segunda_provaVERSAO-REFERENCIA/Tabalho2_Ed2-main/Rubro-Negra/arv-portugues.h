@@ -29,6 +29,8 @@ typedef struct Arv_portugues {
 // Cria um novo nó na árvore
 Arv_portugues* cria_no_arv();
 
+void adicionarTraducaoEmIngles(Arv_portugues *raiz, char *palavraIng, int unidade);
+
 // Troca a cor de um nó e de seus filhos
 void trocaCor_arv(Arv_portugues* H);
 
@@ -48,10 +50,7 @@ Arv_portugues* inserir_rec_arv(Arv_portugues* raiz, Arv_portugues* no);
 Arv_portugues* balancear_arv(Arv_portugues* raiz);
 
 // Busca uma palavra em português na árvore
-Arv_portugues* buscar_palavra_portugues(Arv_portugues* raiz, char* portugues, int unidade);
-
-// Remove uma palavra da árvore vermelho-preta
-int remove_ArvLLRB_arv(Arv_portugues** raiz, char* palavra, int unidade);
+Arv_portugues* buscar_palavra_portugues(Arv_portugues* raiz, char* portugues);
 
 // Move a subárvore esquerda se for RED
 Arv_portugues* move2EsqRED_arv(Arv_portugues* H);
@@ -67,5 +66,7 @@ Arv_portugues* procuraMenor_arv(Arv_portugues* atual);
 
 // Remove um nó específico da árvore
 Arv_portugues* remove_NO_arv(Arv_portugues* H, Arv_portugues* no);
+
+Arv_portugues* remove_ArvLLRB_arv(Arv_portugues *raiz, char *palavra);
 
 #endif // ARV_PORTUGUES_H
