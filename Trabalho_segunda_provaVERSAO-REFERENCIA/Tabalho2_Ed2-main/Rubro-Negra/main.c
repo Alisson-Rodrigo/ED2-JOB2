@@ -79,16 +79,7 @@ int main()
     PortuguesRB *raiz = NULL;
 
     carregarArquivo("/mnt/c/Users/Rayssa Alves/Documents/trabalho_ed2/Tabalho2_Ed2/trabalhoEd2.txt", &raiz);
-
-    // Info info1 = criaInfo("casa", 1);
-    // Info info2 = criaInfo("livro", 2);
-    // Info info3 = criaInfo("carro", 3);
-    // Info info4 = criaInfo("arroz", 4);
-
-    // inserirArvRB(&raiz, &info1);
-    // inserirArvRB(&raiz, &info2);
-    // inserirArvRB(&raiz, &info3);
-    // inserirArvRB(&raiz, &info4);
+    
 
     exibirArvore(raiz);
     printf("\n--------------------------------------------------------------- \n");
