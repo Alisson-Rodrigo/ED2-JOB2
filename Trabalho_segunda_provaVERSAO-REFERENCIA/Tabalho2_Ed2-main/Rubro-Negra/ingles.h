@@ -1,7 +1,6 @@
 #ifndef INGLESBIN_H
 #define INGLESBIN_H
 
-
 // Definição da estrutura para armazenar palavras em inglês em uma árvore binária de busca
 typedef struct inglesbin {
     char palavraIngles[100]; // Palavra em inglês

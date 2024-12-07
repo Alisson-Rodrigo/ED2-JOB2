@@ -129,4 +129,3 @@ void printBinaryTree(Inglesbin *root)
         printBinaryTree(root->dir); // Percorre a árvore à direita
     }
 }
-
