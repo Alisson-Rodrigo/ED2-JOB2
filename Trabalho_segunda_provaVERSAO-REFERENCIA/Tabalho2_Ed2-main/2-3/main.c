@@ -19,7 +19,7 @@ int inserirPalavraPortugues(Portugues23 **arvore, char *palavraPortugues, char *
         adicionarTraducao(noExistente, palavraPortugues, palavraIngles, unidade);
         inseriu = 1;
     } else {
-        Info novoInfo = criaInfo(palavraPortugues, palavraIngles, unidade);
+        Info novoInfo = CriarInfo(palavraPortugues, palavraIngles, unidade);
         inserirArv23(arvore, &novoInfo, &promove, &pai);
         inseriu = 0;
     }
@@ -75,7 +75,7 @@ void carregarArquivo(const char *nomeArquivo, Portugues23 **arvore)
 int main()
 {
     Portugues23 *raiz = NULL;
-    carregarArquivo("C:/Users/PurooLight/Documents/GitHub/ED2-JOB2/Trabalho_segunda_provaVERSAO-REFERENCIA/Tabalho2_Ed2-main/trabalhoEd2.txt", &raiz);
+    carregarArquivo("C:/Users/jorge/OneDrive/Documentos/GitHub/EstruturaDeDadosII/Trabalho_Segunda_Provav2/Rubro-negra/vocabulario1.txt", &raiz);
     
     printf("\n--------------------------------------------------------------- \n");
     printf("Árvore 2-3 carregada:\n");
