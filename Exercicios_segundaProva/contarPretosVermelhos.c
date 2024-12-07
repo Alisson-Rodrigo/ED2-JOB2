@@ -85,6 +85,8 @@ int contarNos (Tree *arv ) {
      }
 }
 
+//
+
 int main() {
     // Inicializar variáveis de contagem
     int red = 0, black = 0;
