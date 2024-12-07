@@ -93,9 +93,10 @@ LONGLONG getTempoNanosegundos() {
 void realizarExperimento(Arv_portugues *arvore, char palavras[30][50]) {
     LONGLONG inicio, fim;
     double tempoTotal = 0;
+    int i;
 
     printf("\n--- Experimento ---\n");
-    for (int i = 0; i < 30; i++) {
+    for (i = 0; i < 30; i++) {
         char caminho[2048] = "";
         inicio = getTempoNanosegundos();
 
@@ -114,7 +115,7 @@ void realizarExperimento(Arv_portugues *arvore, char palavras[30][50]) {
     Arv_portugues *arvore = NULL;
 
     // Carregar o arquivo
-    carregarArquivo("C:/Users/jorge/OneDrive/Documentos/GitHub/EstruturaDeDadosII/Trabalho_segunda_provaVERSAO-REFERENCIA/Tabalho2_Ed2-main/trabalhoEd2.txt", &arvore);
+    carregarArquivo("C:/Users/PurooLight/Documents/GitHub/ED2-JOB2/Trabalho_segunda_provaVERSAO-REFERENCIA/Tabalho2_Ed2-main/trabalhoEd2.txt", &arvore);
 
     // Palavras para o experimento
      char palavras[30][50] = {
