@@ -195,14 +195,12 @@ int main() {
                 printf("Palavras da unidade %d:\n", unidade);
                 imprimirPalavrasPorUnidade(arvore, unidade);
                 break;
-
             case 2:
                 printf("Informe a palavra em português: ");
                 scanf(" %[^\n]", palavraPortugues); // Lê a palavra com espaços
                 printf("Traduções em inglês para '%s':\n", palavraPortugues);
                 imprimirTraducoesIngles(arvore, palavraPortugues);
                 break;
-
             case 3:
                 printf("Informe a palavra em inglês: ");
                 scanf(" %[^\n]", palavraIngles);
@@ -210,7 +208,6 @@ int main() {
                 scanf("%d", &unidade);
                 removerPalavraInglesEArvore(&arvore, palavraIngles, unidade);
                 break;
-
             case 4:
                 printf("Informe a palavra em português: ");
                 scanf(" %[^\n]", palavraPortugues);
@@ -218,11 +215,9 @@ int main() {
                 scanf("%d", &unidade);
                 removerPalavraPortuguesEIngles(&arvore, palavraPortugues, unidade);
                 break;
-
             case 5:
                 printf("Saindo do programa...\n");
                 exit(0);
-
             default:
                 printf("Opção inválida. Tente novamente.\n");
         }
