@@ -75,8 +75,8 @@ void carregarArquivo(const char *nomeArquivo, Arv_pt **arvore)
 
 int main()
 {
-    Arv_pt *raiz = NULL;
-    carregarArquivo("C:/Users/jorge/OneDrive/Documentos/GitHub/EstruturaDeDadosII/Trabalho_segunda_provaVERSAO-REFERENCIA/Tabalho2_Ed2-main/trabalhoEd2.txt", &raiz);
+    Arv_pt *raiz = NULL; 
+    carregarArquivo("C:/Users/PurooLight/Documents/GitHub/ED2-JOB2/Trabalho_segunda_provaVERSAO-REFERENCIA/Tabalho2_Ed2-main/trabalhoEd2.txt", &raiz);
     
     printf("\n--------------------------------------------------------------- \n");
     printf("Árvore 2-3 carregada:\n");
