@@ -4,7 +4,6 @@
 #include <string.h>
 #include "portugues_arv.c"
 #include "ingles_arv.c"
-// #include "arvbin.h"
 
 int inserirPalavraPortugues(Arv_pt **arvore, char *palavraPortugues, char *palavraIngles, int unidade) {
     Info promove;
