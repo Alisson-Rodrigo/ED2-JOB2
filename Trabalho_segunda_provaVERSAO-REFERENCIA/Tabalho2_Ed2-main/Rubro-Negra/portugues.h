@@ -6,7 +6,7 @@
 // Definição da estrutura que irá armazenar a informação de uma palavra e suas traduções
 typedef struct Info
 {
-  Inglesbin *palavraIngles;
+  Arv_ingles *palavraIngles;
   char *palavraPortugues;
 } Info;
 
@@ -36,6 +36,5 @@ Arv_portugues *ProcurarMenor(Arv_portugues *raiz); // Busca o menor nó da árvo
 int RemoverNo(Arv_portugues **raiz, char *valor); // Remove um nó com uma palavra portuguesa específica
 void AdicionarTraducaoEN(Arv_portugues *raiz, char *palavraIng, int unidade); // Adiciona uma tradução em inglês
 Arv_portugues *BuscarPalavra(Arv_portugues **arvore, char *palavraPortugues); // Busca uma palavra portuguesa na árvore
-void BuscarPalavraIngles(Arv_portugues **raiz, char *palavraIngles, int unidade);
 
 #endif // PORTUGUES_H
