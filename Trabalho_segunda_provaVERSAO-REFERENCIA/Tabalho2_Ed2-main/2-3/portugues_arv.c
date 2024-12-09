@@ -558,6 +558,67 @@ void RemoverPalavraArvore23(Arv_pt **raiz, const char *palavra) {
         printf("Elemento '%s' nao encontrado.\n", palavra);
 }
 
+void imprimirPalavrasPorUnidade(Arv_pt *arvore, int unidade) {
+    if (arvore == NULL) return;
+
+    // Percorre a subárvore esquerda
+    imprimirPalavrasPorUnidade(arvore->esq, unidade);
+
+    // Verifica o primeiro conjunto de informações no nó
+    if (arvore->info1.palavraIngles != NULL) {
+        Arv_en *traducao = arvore->info1.palavraIngles;
+        while (traducao != NULL) {
+            if (traducao->unidade == unidade) {
+                printf("%s: %s\n", arvore->info1.palavraPortugues, traducao->palavraIngles);
+            }
+            traducao = traducao->dir;
+        }
+    }
+
+    // Verifica o segundo conjunto de informações (se houver)
+    if (arvore->nInfos == 2 && arvore->info2.palavraIngles != NULL) {
+        Arv_en *traducao = arvore->info2.palavraIngles;
+        while (traducao != NULL) {
+            if (traducao->unidade == unidade) {
+                printf("%s: %s\n", arvore->info2.palavraPortugues, traducao->palavraIngles);
+            }
+            traducao = traducao->dir;
+        }
+    }
+
+    // Percorre a subárvore central
+    imprimirPalavrasPorUnidade(arvore->cent, unidade);
+
+    // Percorre a subárvore direita (se o nó possuir dois conjuntos de informações)
+    if (arvore->nInfos == 2) {
+        imprimirPalavrasPorUnidade(arvore->dir, unidade);
+    }
+}
+
+void imprimirTraducoesIngles(Arv_pt *arvore, char *palavraPortugues) {
+    if (arvore == NULL) return;
+
+    // Verifica se a palavra está no primeiro conjunto de informações
+    if (strcmp(arvore->info1.palavraPortugues, palavraPortugues) == 0) {
+        printf("Traduções para '%s':\n", palavraPortugues);
+        printBinaryTree(arvore->info1.palavraIngles);
+    }
+    // Verifica se a palavra está no segundo conjunto de informações
+    else if (arvore->nInfos == 2 && strcmp(arvore->info2.palavraPortugues, palavraPortugues) == 0) {
+        printf("Traduções para '%s':\n", palavraPortugues);
+        printBinaryTree(arvore->info2.palavraIngles);
+    }
+
+    // Continua a busca nas subárvores, se necessário
+    if (strcmp(palavraPortugues, arvore->info1.palavraPortugues) < 0) {
+        imprimirTraducoesIngles(arvore->esq, palavraPortugues);
+    } else if (arvore->nInfos == 1 || strcmp(palavraPortugues, arvore->info2.palavraPortugues) < 0) {
+        imprimirTraducoesIngles(arvore->cent, palavraPortugues);
+    } else {
+        imprimirTraducoesIngles(arvore->dir, palavraPortugues);
+    }
+}
+
 /*-----------------------------------------------------------------------------------------------------*/
 
 /* (i) informar uma unidade e então imprima todas as palavras da unidade em português seguida das
