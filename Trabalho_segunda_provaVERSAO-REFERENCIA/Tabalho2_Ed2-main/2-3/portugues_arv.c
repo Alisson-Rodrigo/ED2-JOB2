@@ -315,8 +315,6 @@ void ExibirTraducoesPortugues(Arv_pt **raiz, const char *palavraPortugues)
 
 
 
-// ############################################# rEMOÇÃO ############################################
-
 void RemoverTraducoesInglesNaUnidade(Arv_pt **raiz, char *palavraIngles, int unidade) 
 { 
     if (*raiz != NULL) 
