@@ -277,8 +277,6 @@ void MostrarTraducoesUnidade(Arv_en *node, int unidade, const char *palavraPortu
     }
 }
 
-
-
 void ExibirTraducoesPortugues(Arv_pt **raiz, const char *palavraPortugues)
 {
     Arv_pt *resultado = NULL;
@@ -304,9 +302,6 @@ void ExibirTraducoesPortugues(Arv_pt **raiz, const char *palavraPortugues)
         }
     }
 }
-
-
-
 
 void RemoverTraducoesInglesNaUnidade(Arv_pt **raiz, char *palavraIngles, int unidade) 
 { 
