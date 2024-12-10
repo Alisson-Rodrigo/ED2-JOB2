@@ -55,21 +55,17 @@ void cadastrar_nos(Memory **root) {
 
 
 void concatenar_nos(Memory **root) {
-    if (!root || !(*root)) {
-        return;
-    }
+    if (!root || !(*root)) return;
 
     Memory *node = *root;
 
     if (isLeaf(node)) {
-        if (node->numKeys == 2) {
-            if (node->info1->status == node->info2->status) {
-                // Unir os dois blocos
-                node->info1->end = node->info2->end;
-                free(node->info2);
-                node->info2 = NULL;
-                node->numKeys = 1;
-            }
+        if (node->numKeys == 2 && node->info1->status == node->info2->status) {
+            // Unir os dois blocos
+            node->info1->end = node->info2->end;
+            free(node->info2);
+            node->info2 = NULL;
+            node->numKeys = 1;
         }
     } else {
         concatenar_nos(&node->left);
@@ -87,7 +83,7 @@ void alocar_blocos(Memory **root, int quantidade_blocos) {
         return;
     }
 
-    // Encontrar um nó que tenha espaço suficiente
+    // Encontrar um nó com espaço suficiente
     Memory *node = FindSpace(*root, quantidade_blocos);
     if (!node) {
         printf("Erro: Nao ha blocos livres suficientes para alocar.\n");
@@ -96,7 +92,7 @@ void alocar_blocos(Memory **root, int quantidade_blocos) {
 
     Info *targetInfo = NULL;
 
-    // Verificar qual info do nó contém espaço suficiente
+    // Identificar qual bloco contém espaço suficiente
     if (node->info1->status == FREE && (node->info1->end - node->info1->start + 1) >= quantidade_blocos) {
         targetInfo = node->info1;
     } else if (node->numKeys == 2 && node->info2->status == FREE &&
@@ -150,6 +146,7 @@ void liberar_blocos(Memory **root, int inicio, int quantidade_blocos) {
     Memory *node = *root;
     Info *targetInfo = NULL;
 
+    // Encontrar o bloco que contém o intervalo solicitado
     while (node) {
         if (isLeaf(node)) {
             if (inicio >= node->info1->start && inicio <= node->info1->end) {
@@ -175,26 +172,33 @@ void liberar_blocos(Memory **root, int inicio, int quantidade_blocos) {
         return;
     }
 
-    int blocoTamanho = targetInfo->end - targetInfo->start + 1;
-    if (quantidade_blocos > blocoTamanho) {
-        printf("Erro: Quantidade de blocos excede o tamanho do bloco.\n");
+    int espacoDisponivel = targetInfo->end - targetInfo->start + 1;
+
+    if (quantidade_blocos > espacoDisponivel) {
+        printf("Erro: Quantidade de blocos a liberar excede o tamanho do bloco.\n");
         return;
     }
 
-    if (quantidade_blocos == blocoTamanho) {
+    if (quantidade_blocos == espacoDisponivel) {
+        // Liberar o bloco inteiro
         targetInfo->status = FREE;
     } else {
-        int newStart = inicio + quantidade_blocos;
-        Info *newInfo = CreateInfo(newStart, targetInfo->end, OCCUPIED);
+        // Dividir o bloco
+        int novoInicio = inicio + quantidade_blocos;
+        Info *restante = CreateInfo(novoInicio, targetInfo->end, targetInfo->status);
+
         targetInfo->end = inicio - 1;
         targetInfo->status = FREE;
 
+        // Inserir o bloco restante
         int flag = 0;
-        Insert23(root, NULL, NULL, newInfo->start, newInfo->end, OCCUPIED, &flag);
+        Insert23(root, NULL, NULL, restante->start, restante->end, restante->status, &flag);
     }
 
+    // Concatenar nós adjacentes após a liberação
     concatenar_nos(root);
-    printf("Blocos liberados com sucesso.\n");
+
+    printf("Blocos liberados com sucesso: Inicio = %d, Quantidade = %d\n", inicio, quantidade_blocos);
 }
 
 
