@@ -111,8 +111,10 @@ void menu(Arv_pt *raiz)
                         continuar = 0; // Encerra a repetição
                     }
                 } while (continuar == 1);
+
+                break;
+
             }
-            break;
 
             case 2: // Informar palavra em português e listar traduções em inglês
             {
@@ -121,8 +123,8 @@ void menu(Arv_pt *raiz)
                 scanf(" %[^\n]s", palavraPortugues); // Lê a palavra com espaços
                 printf("\nTraducoes em ingles para '%s':\n", palavraPortugues);
                 ExibirTraducoesPortugues(&raiz, palavraPortugues);
+                break;
             }
-            break;
 
             case 3:
             {
@@ -133,8 +135,8 @@ void menu(Arv_pt *raiz)
                 printf("Informe a unidade: ");
                 scanf("%d", &unidade);
                 RemoverTraducoesInglesNaUnidade(&raiz, palavraIngles, unidade);
+                break;
             }
-            break;
 
             case 4:
             {
@@ -142,8 +144,9 @@ void menu(Arv_pt *raiz)
                 printf("Informe a palavra em portugues: ");
                 scanf(" %[^\n]s", palavraPortugues);
                 RemoverPalavraArvore23(&raiz, palavraPortugues);
+                break;
+
             }
-            break;
 
             case 0: // Sair do programa
                 printf("Saindo do programa...\n");
@@ -163,7 +166,7 @@ int main() {
     Arv_pt *raiz = NULL;
 
     // Carregar o arquivo com palavras e traduções
-    carregarArquivo("C:/Users/purolight/Documents/GitHub/ED2-JOB2/Trabalho_segunda_provaVERSAO-REFERENCIA/Tabalho2_Ed2-main/trabalhoEd2.txt", &raiz);
+    carregarArquivo("C:/Users/purolight/Documents/GitHub/ED2-JOB2/Trabalho_segunda_provaVERSAO-REFERENCIA/trabalhoEd2.txt", &raiz);
 
 
     // Chamar o menu interativo
