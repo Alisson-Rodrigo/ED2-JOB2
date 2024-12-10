@@ -160,8 +160,6 @@ void menu(Arv_pt *raiz)
 }
 
 
-
-
 int main() {
     Arv_pt *raiz = NULL;
 
