@@ -134,6 +134,7 @@ void menu(Arv_pt *raiz)
                 scanf("%d", &unidade);
                 RemoverTraducoesInglesNaUnidade(&raiz, palavraIngles, unidade);
             }
+            break;
 
             case 4:
             {
@@ -142,6 +143,7 @@ void menu(Arv_pt *raiz)
                 scanf(" %[^\n]s", palavraPortugues);
                 RemoverPalavraArvore23(&raiz, palavraPortugues);
             }
+            break;
 
             case 0: // Sair do programa
                 printf("Saindo do programa...\n");
@@ -161,7 +163,7 @@ int main() {
     Arv_pt *raiz = NULL;
 
     // Carregar o arquivo com palavras e traduções
-    carregarArquivo("C:/Users/PurooLight/Documents/GitHub/ED2-JOB2/Trabalho_segunda_provaVERSAO-REFERENCIA/Tabalho2_Ed2-main/trabalhoEd2.txt", &raiz);
+    carregarArquivo("C:/Users/purolight/Documents/GitHub/ED2-JOB2/Trabalho_segunda_provaVERSAO-REFERENCIA/Tabalho2_Ed2-main/trabalhoEd2.txt", &raiz);
 
 
     // Chamar o menu interativo
