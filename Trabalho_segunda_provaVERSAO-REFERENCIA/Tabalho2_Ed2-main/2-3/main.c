@@ -69,7 +69,6 @@ void carregarArquivo(const char *nomeArquivo, Arv_pt **arvore)
     fclose(arquivo);
 }
 
-
 void menu(Arv_pt *raiz)
 {
     int opcao;
@@ -141,7 +140,7 @@ int main() {
     Arv_pt *raiz = NULL;
 
     // Carregar o arquivo com palavras e traduções
-    carregarArquivo("C:/Users/jorge/OneDrive/Documentos/GitHub/EstruturaDeDadosII/Trabalho_segunda_provaVERSAO-REFERENCIA/Tabalho2_Ed2-main/trabalhoEd2.txt", &raiz);
+    carregarArquivo("C:/Users/PurooLight/Documents/GitHub/ED2-JOB2/Trabalho_segunda_provaVERSAO-REFERENCIA/Tabalho2_Ed2-main/trabalhoEd2.txt", &raiz);
 
 
     // Chamar o menu interativo
