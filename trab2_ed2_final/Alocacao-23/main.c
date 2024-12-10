@@ -5,12 +5,9 @@
 
 #define MEMORY_SIZE (1024 * 1024) // Tamanho total da memoria (1MB por bloco)
 
-// Funcao para cadastrar os nos da arvore
-void cadastrar_nos(Memory **root)
-{
+void cadastrar_nos(Memory **root) {
     int start = 0, end, status;
 
-    // Cadastro do primeiro no
     printf("Informe o status do primeiro no (1 para Livre, 0 para Ocupado): ");
     scanf("%d", &status);
 
@@ -20,276 +17,186 @@ void cadastrar_nos(Memory **root)
     printf("Informe o endereco final do primeiro no (maximo %d): ", MEMORY_SIZE);
     scanf("%d", &end);
 
-    if (end < start || end > MEMORY_SIZE)
-    {
-        printf("Endereco final invalido. O programa sera encerrado.\n");
+    if (end < start || end > MEMORY_SIZE) {
+        printf("Endereco final invalido.\n");
         return;
     }
 
-    // Criar o primeiro no
     Info *info = CreateInfo(start, end, status);
-    if (!info)
-    {
-        printf("Erro ao alocar memoria para o no inicial.\n");
-        return;
-    }
-
     *root = createNode(info, NULL, NULL);
-    if (!*root)
-    {
-        printf("Erro ao criar o no inicial.\n");
-        free(info);
-        return;
-    }
 
-    // Cadastro dos nos subsequentes
-    while (end < MEMORY_SIZE)
-    {
-        start = end + 1; // Proximo bloco comeca logo apos o final do anterior
+    while (end < MEMORY_SIZE) {
+        start = end + 1;
         printf("Informe o endereco final do proximo no (maximo %d para terminar): ", MEMORY_SIZE);
         scanf("%d", &end);
 
-        if (end < start || end > MEMORY_SIZE)
-        {
-            printf("Endereco final invalido.\n");
-            int escolha;
-            printf("Deseja tentar novamente (1) ou voltar ao menu principal (2)? ");
-            scanf("%d", &escolha);
-            if (escolha == 2)
-            {
-                break; // Voltar ao menu principal
-            }
-            else
-            {
-                continue; // Tentar novamente
-            }
+        if (end <= start || end > MEMORY_SIZE) {
+            printf("Endereco final invalido. Tente novamente.\n");
+            continue;
         }
 
-        // Alternar status entre Livre e Ocupado
+        // Alternar status automaticamente
         status = (status == FREE) ? OCCUPIED : FREE;
 
-        // Criar o novo no
-        info = CreateInfo(start, end, status);
-        if (!info)
-        {
-            printf("Erro ao alocar memoria para o proximo no.\n");
-            break;
-        }
-
-        // Inserir na arvore 2-3
+        Info *newInfo = CreateInfo(start, end, status);
         int flag = 0;
         Insert23(root, NULL, NULL, start, end, status, &flag);
-        if (!flag)
-        {
-            printf("Erro ao inserir no na arvore.\n");
-            free(info);
-            break;
-        }
 
-        if (end == MEMORY_SIZE)
-        {
-            printf("Cadastro de nos concluido.\n");
+        if (end == MEMORY_SIZE) {
+            printf("Cadastro concluido.\n");
             break;
         }
     }
+
+    // Concatenar nos adjacentes, se necessario
+    concatenar_nos(root);
 }
-void concatenar_nos(Memory **root)
-{
-    if (!root || !(*root))
+
+
+
+void concatenar_nos(Memory **root) {
+    if (!root || !(*root)) {
         return;
+    }
 
     Memory *node = *root;
 
-    // Se o nó é folha, tenta concatenar os blocos adjacentes
-    if (isLeaf(node))
-    {
-        if (node->numKeys == 2)
-        {
-            // Se os dois blocos possuem o mesmo status, concatenar
-            if (node->info1->status == node->info2->status)
-            {
-                node->info1->end = node->info2->end; // Atualiza o final do primeiro bloco
-                free(node->info2);                   // Libera o segundo bloco
-                node->info2 = NULL;                  // Remove o segundo bloco
-                node->numKeys = 1;                   // Atualiza o número de chaves
+    if (isLeaf(node)) {
+        if (node->numKeys == 2) {
+            if (node->info1->status == node->info2->status) {
+                // Unir os dois blocos
+                node->info1->end = node->info2->end;
+                free(node->info2);
+                node->info2 = NULL;
+                node->numKeys = 1;
             }
         }
-    }
-    else
-    {
-        // Recursivamente aplica a concatenação nos filhos
+    } else {
         concatenar_nos(&node->left);
         concatenar_nos(&node->center);
-
-        if (node->numKeys == 2)
-        {
+        if (node->numKeys == 2) {
             concatenar_nos(&node->right);
         }
     }
 }
 
-void alocar_blocos(Memory **root, int quantidade_blocos)
-{
-    Memory *node = NULL;
+
+void alocar_blocos(Memory **root, int quantidade_blocos) {
+    if (!root || !(*root)) {
+        printf("Erro: Nenhuma memoria cadastrada.\n");
+        return;
+    }
+
+    // Encontrar um nó que tenha espaço suficiente
+    Memory *node = FindSpace(*root, quantidade_blocos);
+    if (!node) {
+        printf("Erro: Nao ha blocos livres suficientes para alocar.\n");
+        return;
+    }
+
     Info *targetInfo = NULL;
 
-    if (root && *root)
-    {
-        // Buscar um nó que tenha espaço suficiente
-        node = FindSpace(*root, quantidade_blocos);
-
-        if (node)
-        {
-            // Determinar qual bloco será alocado
-            if (node->info1->status == FREE && (node->info1->end - node->info1->start + 1) >= quantidade_blocos)
-            {
-                targetInfo = node->info1;
-            }
-            else if (node->numKeys == 2 && node->info2->status == FREE &&
-                     (node->info2->end - node->info2->start + 1) >= quantidade_blocos)
-            {
-                targetInfo = node->info2;
-            }
-
-            if (targetInfo)
-            {
-                // Atualizar o bloco encontrado
-                int espacoDisponivel = targetInfo->end - targetInfo->start + 1;
-                if (espacoDisponivel > quantidade_blocos)
-                {
-                    int novo_inicio = targetInfo->start + quantidade_blocos;
-
-                    // Criar novo bloco livre para o espaço restante
-                    Info *novo_info = CreateInfo(novo_inicio, targetInfo->end, FREE);
-                    targetInfo->end = novo_inicio - 1;
-
-                    // Inserir novo bloco na árvore
-                    int flag = 0;
-                    Insert23(root, NULL, NULL, novo_info->start, novo_info->end, FREE, &flag);
-                }
-
-                // Alterar o status para ocupado
-                targetInfo->status = OCCUPIED;
-
-                printf("Blocos alocados: Inicio = %d, Fim = %d\n", targetInfo->start, targetInfo->end);
-
-                // Concatenar nós adjacentes
-                concatenar_nos(root);
-            }
-            else
-            {
-                printf("Erro interno: Nao foi possivel encontrar um bloco adequado.\n");
-            }
-        }
-        else
-        {
-            printf("Erro: Nao ha blocos livres suficientes para alocar.\n");
-        }
+    // Verificar qual info do nó contém espaço suficiente
+    if (node->info1->status == FREE && (node->info1->end - node->info1->start + 1) >= quantidade_blocos) {
+        targetInfo = node->info1;
+    } else if (node->numKeys == 2 && node->info2->status == FREE &&
+               (node->info2->end - node->info2->start + 1) >= quantidade_blocos) {
+        targetInfo = node->info2;
     }
-    else
-    {
-        printf("Erro: Nenhuma memoria cadastrada.\n");
+
+    if (!targetInfo) {
+        printf("Erro interno: Bloco adequado nao encontrado.\n");
+        return;
     }
+
+    int espacoDisponivel = targetInfo->end - targetInfo->start + 1;
+    int inicio = targetInfo->start;
+
+    if (espacoDisponivel > quantidade_blocos) {
+        // Dividir o bloco
+        int novoInicio = inicio + quantidade_blocos;
+
+        // Atualizar o bloco original com os blocos restantes
+        targetInfo->start = novoInicio;
+
+        // Criar novo bloco para os blocos alocados
+        Info *alocadoInfo = CreateInfo(inicio, novoInicio - 1, OCCUPIED);
+        int flag = 0;
+        Insert23(root, NULL, NULL, alocadoInfo->start, alocadoInfo->end, OCCUPIED, &flag);
+
+        if (!flag) {
+            printf("Erro ao inserir bloco alocado na arvore.\n");
+            free(alocadoInfo);
+            return;
+        }
+    } else {
+        // Marcar todo o bloco como ocupado
+        targetInfo->status = OCCUPIED;
+    }
+
+    // Concatenar nós adjacentes após a alocação
+    concatenar_nos(root);
+
+    printf("Blocos alocados com sucesso: Inicio = %d, Quantidade = %d\n", inicio, quantidade_blocos);
 }
-void liberar_blocos(Memory **root, int inicio, int quantidade_blocos)
-{
-    if (!root || !(*root))
-    {
+
+
+void liberar_blocos(Memory **root, int inicio, int quantidade_blocos) {
+    if (!root || !(*root)) {
         printf("Erro: Nenhuma memoria cadastrada.\n");
         return;
     }
 
     Memory *node = *root;
     Info *targetInfo = NULL;
-    int encontrado = 0; // Flag para determinar se o bloco foi encontrado
 
-    // Procurar o bloco que contém o intervalo solicitado
-    while (node != NULL && !encontrado)
-    {
-        if (isLeaf(node))
-        {
-            if (inicio >= node->info1->start && inicio <= node->info1->end)
-            {
+    while (node) {
+        if (isLeaf(node)) {
+            if (inicio >= node->info1->start && inicio <= node->info1->end) {
                 targetInfo = node->info1;
-                encontrado = 1; // Bloco encontrado
-            }
-            else if (node->numKeys == 2 && inicio >= node->info2->start && inicio <= node->info2->end)
-            {
+                break;
+            } else if (node->numKeys == 2 && inicio >= node->info2->start && inicio <= node->info2->end) {
                 targetInfo = node->info2;
-                encontrado = 1; // Bloco encontrado
+                break;
             }
-        }
-        else
-        {
-            if (inicio < node->info1->start)
-            {
+        } else {
+            if (inicio < node->info1->start) {
                 node = node->left;
-            }
-            else if (node->numKeys == 1 || inicio < node->info2->start)
-            {
+            } else if (node->numKeys == 1 || inicio < node->info2->start) {
                 node = node->center;
-            }
-            else
-            {
+            } else {
                 node = node->right;
             }
         }
     }
 
-    if (!encontrado || !targetInfo)
-    {
-        printf("Erro: Nao foi encontrado nenhum bloco contendo o endereco informado.\n");
+    if (!targetInfo) {
+        printf("Erro: Bloco nao encontrado.\n");
         return;
     }
 
-    // Determinar o tamanho do bloco e ajustar a árvore
-    int tamanho_bloco = targetInfo->end - targetInfo->start + 1;
-
-    if (quantidade_blocos > tamanho_bloco)
-    {
-        printf("Erro: A quantidade de blocos a liberar excede o tamanho do bloco encontrado.\n");
+    int blocoTamanho = targetInfo->end - targetInfo->start + 1;
+    if (quantidade_blocos > blocoTamanho) {
+        printf("Erro: Quantidade de blocos excede o tamanho do bloco.\n");
         return;
     }
 
-    if (quantidade_blocos == tamanho_bloco)
-    {
-        // Caso o tamanho do bloco seja exatamente o solicitado
+    if (quantidade_blocos == blocoTamanho) {
         targetInfo->status = FREE;
-    }
-    else
-    {
-        // Caso o bloco precise ser dividido
-        int novo_inicio = inicio + quantidade_blocos;
-
-        // Criar um novo bloco ocupado para o restante
-        Info *novo_info_ocupado = CreateInfo(novo_inicio, targetInfo->end, targetInfo->status);
-        if (!novo_info_ocupado)
-        {
-            printf("Erro: Falha ao alocar memoria para o novo bloco.\n");
-            return;
-        }
-
+    } else {
+        int newStart = inicio + quantidade_blocos;
+        Info *newInfo = CreateInfo(newStart, targetInfo->end, OCCUPIED);
         targetInfo->end = inicio - 1;
-
-        // Atualizar o bloco original como livre
         targetInfo->status = FREE;
 
-        // Inserir o novo bloco na árvore
         int flag = 0;
-        Insert23(root, NULL, NULL, novo_info_ocupado->start, novo_info_ocupado->end, novo_info_ocupado->status, &flag);
-        if (!flag)
-        {
-            printf("Erro: Falha ao inserir o novo bloco na arvore.\n");
-            free(novo_info_ocupado);
-            return;
-        }
+        Insert23(root, NULL, NULL, newInfo->start, newInfo->end, OCCUPIED, &flag);
     }
 
-    // Concatenar nós adjacentes após a liberação
     concatenar_nos(root);
-
-    printf("Blocos liberados: Inicio = %d, Quantidade = %d\n", inicio, quantidade_blocos);
+    printf("Blocos liberados com sucesso.\n");
 }
+
 
 
 // Funcao principal com menu interativo
