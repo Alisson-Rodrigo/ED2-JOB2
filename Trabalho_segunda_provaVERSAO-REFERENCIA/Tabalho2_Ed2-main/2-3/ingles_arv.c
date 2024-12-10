@@ -14,7 +14,7 @@ Arv_en *createNode(const char *palavraIngles, int unidade)
     return novoNo;
 }
 
-// Função para inserir uma palavra em inglês na arvore binaria de busca
+
 Arv_en *insertpalavraIngles(Arv_en *root, const char *palavraIngles, int unidade)
 {
     Arv_en *result;
@@ -41,13 +41,12 @@ void printBinaryTree(Arv_en *root)
 {
     if (root != NULL)
     {
-        printBinaryTree(root->esq); // Percorre a árvore à esquerda
-        printf("\n");
-        // Imprime a tradução de inglês associada à palavra em português
-        printf("Palavra em Inglês: %s = Unidade: %d\n", root->palavraIngles, root->unidade);
-        printBinaryTree(root->dir); // Percorre a árvore à direita
+        printBinaryTree(root->esq); 
+        printf("%s\n", root->palavraIngles); 
+        printBinaryTree(root->dir); 
     }
 }
+
 
 int ehFolhas(Arv_en *raiz){
     return (raiz->esq == NULL && raiz->dir == NULL);

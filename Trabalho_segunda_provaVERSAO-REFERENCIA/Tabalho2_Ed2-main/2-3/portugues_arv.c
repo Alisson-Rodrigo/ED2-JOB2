@@ -3,12 +3,7 @@
 #include <string.h>
 #include "portugues_arv.h"
 #include "ingles_arv.h"
-/*-----------------------------------------------------------------------------------------------------*/
 
-// ############################################## ArVOrE 2-3 ##############################################
-
-
-/* (pre-itens) funções necessarias para que os itens i, ii, iii e iv possam ocorrer */
 Info CriarInfo(char *palavra, char *palavraIngles, int unidade)
 {
     Info info;
@@ -31,7 +26,7 @@ Arv_pt *CriarNoArvore23(const Info *informacao, Arv_pt *filhoesq, Arv_pt *filhoc
     else
     {
         no->info1 = *informacao;
-        memset(&(no->info2), 0, sizeof(Info)); // Inicializa info2 com zeros
+        memset(&(no->info2), 0, sizeof(Info)); 
         no->esq = filhoesq;
         no->cent = filhocen;
         no->dir = NULL;
@@ -92,13 +87,13 @@ int NoEhFolha(const Arv_pt *no)
 
 Arv_pt *BuscarNoPorPalavra(Arv_pt **no, const char *palavraPortugues)
 {
-    Arv_pt *inserida = NULL; // Inicializa o retorno como NULL
+    Arv_pt *inserida = NULL; 
 
     if (no != NULL && *no != NULL)
     {
         if (strcmp(palavraPortugues, (*no)->info1.palavraPortugues) == 0)
         {
-            inserida = (*no); // Palavra encontrada, retorna o nó
+            inserida = (*no); 
         }
         else if ((*no)->nInfos == 2 && strcmp(palavraPortugues, (*no)->info2.palavraPortugues) == 0)
         {
@@ -106,7 +101,7 @@ Arv_pt *BuscarNoPorPalavra(Arv_pt **no, const char *palavraPortugues)
         }
         else
         {
-            // Continua a busca nos filhos
+            
             if (strcmp(palavraPortugues, (*no)->info1.palavraPortugues) < 0)
             {
                 inserida = BuscarNoPorPalavra(&(*no)->esq, palavraPortugues);
@@ -143,32 +138,32 @@ Arv_pt *InserirInfoArvore23(Arv_pt **no, Info *informacao, Info *promove, Arv_pt
     Arv_pt *maiorNo = NULL;
     if (*no == NULL)
     {
-        // Cria um novo nó caso seja nulo
+        
         *no = CriarNoArvore23(informacao, NULL, NULL);
     }
     else
     {
         if (NoEhFolha(*no))
-        { // Caso seja folha
+        { 
             if ((*no)->nInfos == 1)
             {
-                // O nó tem espaço para a nova chave
+                
                 *no = AdicionarInfo(*no, informacao, NULL);
             }
             else
             {
-                // O nó precisa ser quebrado
+                
                 maiorNo = QuebrarNo23(no, informacao, promove, NULL);
                 if (*pai == NULL)
-                { // Se não há pai, criar nova raiz
+                { 
                     *no = CriarNoArvore23(promove, *no, maiorNo);
                     maiorNo = NULL;
                 }
             }
         }
         else
-        { // Nó não e folha
-            // Navega para o filho apropriado
+        { 
+            
             if (strcmp(informacao->palavraPortugues, (*no)->info1.palavraPortugues) < 0)
             {
                 maiorNo = InserirInfoArvore23(&((*no)->esq), informacao, promove, no);
@@ -182,18 +177,18 @@ Arv_pt *InserirInfoArvore23(Arv_pt **no, Info *informacao, Info *promove, Arv_pt
                 maiorNo = InserirInfoArvore23(&((*no)->dir), informacao, promove, no);
             }
 
-            // Após inserir, verifica se houve promoção
+          
             if (maiorNo)
             {
                 if ((*no)->nInfos == 1)
                 {
-                    // Adiciona chave promovida no nó atual
+                    
                     *no = AdicionarInfo(*no, promove, maiorNo);
                     maiorNo = NULL;
                 }
                 else
                 {
-                    // O nó precisa ser quebrado
+                    
                     maiorNo = QuebrarNo23(no, promove, &promove1, &maiorNo);
                     if (*pai == NULL)
                     {
@@ -224,7 +219,6 @@ void InserirTraducaoIngles(Info *info, const char *palavraIng, int unidade)
     info->palavraIngles = insertpalavraIngles(info->palavraIngles, palavraIng, unidade);
 }
 
-// ############################################## FUNÇOES PArA EXIBIr ##############################################
 
 void ExibirArvore23(const Arv_pt *raiz)
 {
@@ -238,12 +232,10 @@ void ExibirArvore23(const Arv_pt *raiz)
             printf("\n");
         }
         ExibirArvore23(raiz->cent);
-        // Se houver o segundo elemento (nInfos == 2), exibe o segundo filho
         if (raiz->nInfos == 2)
         {
             printf("Palavra (PT): %s", raiz->info2.palavraPortugues);
 
-            // Exibir a tradução em inglês, se houver
             if (raiz->info2.palavraIngles != NULL && raiz->info2.palavraIngles->palavraIngles != NULL)
                 printBinaryTree(raiz->info2.palavraIngles);
             printf("\n");
@@ -278,13 +270,14 @@ void MostrarTraducoesUnidade(Arv_en *node, int unidade, const char *palavraPortu
     {
         if (node->unidade == unidade)
         {
-            printf("Palavra em Português: %s\n", palavraPortugues);
-            printf("Palavra em inglês: %s\n", node->palavraIngles);
+            printf("%s: %s;\n", palavraPortugues, node->palavraIngles);
         }
         MostrarTraducoesUnidade(node->esq, unidade, palavraPortugues);
         MostrarTraducoesUnidade(node->dir, unidade, palavraPortugues);
     }
 }
+
+
 
 void ExibirTraducoesPortugues(Arv_pt **raiz, const char *palavraPortugues)
 {
@@ -294,7 +287,7 @@ void ExibirTraducoesPortugues(Arv_pt **raiz, const char *palavraPortugues)
         resultado = BuscarNoPorPalavra(raiz, palavraPortugues);
         if (resultado)
         {
-            printf("Traduções em inglês para a palavra '%s':\n", palavraPortugues);
+            printf("Traducoes em ingles para '%s':\n", palavraPortugues);
 
             if (strcmp(palavraPortugues, resultado->info1.palavraPortugues) == 0)
             {
@@ -304,14 +297,14 @@ void ExibirTraducoesPortugues(Arv_pt **raiz, const char *palavraPortugues)
             {
                 printBinaryTree(resultado->info2.palavraIngles);
             }
-            
         }
         else
         {
-            printf("A palavra '%s' não foi encontrada na árvore.\n", palavraPortugues);
+            printf("A palavra '%s' noo foi encontrada na arvore.\n", palavraPortugues);
         }
     }
 }
+
 
 
 
@@ -558,86 +551,3 @@ void RemoverPalavraArvore23(Arv_pt **raiz, const char *palavra) {
         printf("Elemento '%s' nao encontrado.\n", palavra);
 }
 
-void imprimirPalavrasPorUnidade(Arv_pt *arvore, int unidade) {
-    if (arvore == NULL) return;
-
-    // Percorre a subárvore esquerda
-    imprimirPalavrasPorUnidade(arvore->esq, unidade);
-
-    // Verifica o primeiro conjunto de informações no nó
-    if (arvore->info1.palavraIngles != NULL) {
-        Arv_en *traducao = arvore->info1.palavraIngles;
-        while (traducao != NULL) {
-            if (traducao->unidade == unidade) {
-                printf("%s: %s\n", arvore->info1.palavraPortugues, traducao->palavraIngles);
-            }
-            traducao = traducao->dir;
-        }
-    }
-
-    // Verifica o segundo conjunto de informações (se houver)
-    if (arvore->nInfos == 2 && arvore->info2.palavraIngles != NULL) {
-        Arv_en *traducao = arvore->info2.palavraIngles;
-        while (traducao != NULL) {
-            if (traducao->unidade == unidade) {
-                printf("%s: %s\n", arvore->info2.palavraPortugues, traducao->palavraIngles);
-            }
-            traducao = traducao->dir;
-        }
-    }
-
-    // Percorre a subárvore central
-    imprimirPalavrasPorUnidade(arvore->cent, unidade);
-
-    // Percorre a subárvore direita (se o nó possuir dois conjuntos de informações)
-    if (arvore->nInfos == 2) {
-        imprimirPalavrasPorUnidade(arvore->dir, unidade);
-    }
-}
-
-void imprimirTraducoesIngles(Arv_pt *arvore, char *palavraPortugues) {
-    if (arvore == NULL) return;
-
-    // Verifica se a palavra está no primeiro conjunto de informações
-    if (strcmp(arvore->info1.palavraPortugues, palavraPortugues) == 0) {
-        printf("Traduções para '%s':\n", palavraPortugues);
-        printBinaryTree(arvore->info1.palavraIngles);
-    }
-    // Verifica se a palavra está no segundo conjunto de informações
-    else if (arvore->nInfos == 2 && strcmp(arvore->info2.palavraPortugues, palavraPortugues) == 0) {
-        printf("Traduções para '%s':\n", palavraPortugues);
-        printBinaryTree(arvore->info2.palavraIngles);
-    }
-
-    // Continua a busca nas subárvores, se necessário
-    if (strcmp(palavraPortugues, arvore->info1.palavraPortugues) < 0) {
-        imprimirTraducoesIngles(arvore->esq, palavraPortugues);
-    } else if (arvore->nInfos == 1 || strcmp(palavraPortugues, arvore->info2.palavraPortugues) < 0) {
-        imprimirTraducoesIngles(arvore->cent, palavraPortugues);
-    } else {
-        imprimirTraducoesIngles(arvore->dir, palavraPortugues);
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------------*/
-
-/* (i) informar uma unidade e então imprima todas as palavras da unidade em português seguida das
-equivalentes em inglês */
-
-/*-----------------------------------------------------------------------------------------------------*/
-
-/* (ii) informar uma palavraPortugues em português e então imprima todas as palavras em inglês equivalente à palavraPortugues em
-português dada, independente da unidade */
-
-/*-----------------------------------------------------------------------------------------------------*/
-
-/* (iii) informar uma palavraPortugues em inglês e a unidade a qual a mesma pertence removÊ-la das arvores binarias
-das quais ela pertence. Caso ela seja a única palavraPortugues em uma das arvores binarias, remover tambem da
-arvore 2-3 */
-
-/*-----------------------------------------------------------------------------------------------------*/
-
-/* (iv)informar uma palavraPortugues em português e a unidade a qual a mesma pertence e então removê-la, para isto
-deve remover a palavraPortugues em inglês da arvore binaria correspondente a palavraPortugues em português da mesma
-unidade. Caso ela seja a única palavraPortugues na arvore binaria, a palavraPortugues em português deve ser removida da
-arvore 2-3 */
