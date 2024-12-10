@@ -77,6 +77,8 @@ void menu(Arv_pt *raiz)
         printf("\nMenu de Opcoes:\n");
         printf("1. Informar uma unidade e listar palavras em portugues e suas traducoes\n");
         printf("2. Informar uma palavra em portugues e listar traducoes em ingles\n");
+        printf("3. Remover palavra em ingles e atualizacoes associadas\n");
+        printf("4. Remover palavra em portugues e traducoes associadas\n");
         printf("0. Sair\n");
         printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
@@ -121,6 +123,25 @@ void menu(Arv_pt *raiz)
                 ExibirTraducoesPortugues(&raiz, palavraPortugues);
             }
             break;
+
+            case 3:
+            {
+                char palavraIngles[100];
+                int unidade;
+                printf("Informe a palavra em ingles: ");
+                scanf(" %[^\n]s", palavraIngles);
+                printf("Informe a unidade: ");
+                scanf("%d", &unidade);
+                RemoverTraducoesInglesNaUnidade(&raiz, palavraIngles, unidade);
+            }
+
+            case 4:
+            {
+                char palavraPortugues[100];
+                printf("Informe a palavra em portugues: ");
+                scanf(" %[^\n]s", palavraPortugues);
+                RemoverPalavraArvore23(&raiz, palavraPortugues);
+            }
 
             case 0: // Sair do programa
                 printf("Saindo do programa...\n");
