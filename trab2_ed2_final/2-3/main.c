@@ -166,7 +166,7 @@ int main() {
     Arv_pt *raiz = NULL;
 
     // Carregar o arquivo com palavras e traduções
-    carregarArquivo("C:/Users/purolight/Documents/GitHub/ED2-JOB2/Trabalho_segunda_provaVERSAO-REFERENCIA/trabalhoEd2.txt", &raiz);
+    carregarArquivo("C:/Users/PurooLight/Documents/GitHub/ED2-JOB2/trab2_ed2_final/trabalhoEd2.txt", &raiz);
 
 
     // Chamar o menu interativo
