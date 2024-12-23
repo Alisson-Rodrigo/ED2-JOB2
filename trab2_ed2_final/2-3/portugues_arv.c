@@ -268,7 +268,7 @@ void MostrarTraducoesUnidade(Arv_en *node, int unidade, const char *palavraPortu
 {
     if (node)
     {
-        if (node->unidade == unidade)
+        if (node->unidade.unidade == unidade)
         {
             printf("%s: %s;\n", palavraPortugues, node->palavraIngles);
         }
@@ -309,13 +309,13 @@ void RemoverTraducoesInglesNaUnidade(Arv_pt **raiz, char *palavraIngles, int uni
     {
         RemoverTraducoesInglesNaUnidade(&(*raiz)->esq, palavraIngles, unidade);
 
-        if ((*raiz)->info1.palavraIngles != NULL && (*raiz)->info1.palavraIngles->unidade == unidade) 
+        if ((*raiz)->info1.palavraIngles != NULL && (*raiz)->info1.palavraIngles->unidade.unidade == unidade) 
         {
             removerPalavraIngles(&(*raiz)->info1.palavraIngles, palavraIngles);
         }
         RemoverTraducoesInglesNaUnidade(&(*raiz)->cent, palavraIngles, unidade);
 
-        if ((*raiz)->nInfos == 2 && (*raiz)->info2.palavraIngles != NULL && (*raiz)->info2.palavraIngles->unidade == unidade) 
+        if ((*raiz)->nInfos == 2 && (*raiz)->info2.palavraIngles != NULL && (*raiz)->info2.palavraIngles->unidade.unidade == unidade) 
         {
             removerPalavraIngles(&(*raiz)->info2.palavraIngles, palavraIngles);
         }

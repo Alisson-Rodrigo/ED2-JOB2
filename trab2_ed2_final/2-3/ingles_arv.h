@@ -6,17 +6,16 @@
 #include <string.h>
 #include "portugues_arv.h" 
 
+typedef struct listUnit {
+    int unidade;
+    struct ListUnit *prox;
+}ListUnit;
 
 typedef struct Arv_en {
     char palavraIngles[50];
     struct Arv_en *dir, *esq;
     ListUnit unidade;
 } Arv_en;
-
-typedef struct listUnit {
-    int unidade;
-    struct ListUnit *prox;
-}ListUnit;
 
 
 Arv_en *createNode(const char *palavraIngles, int unidade);
